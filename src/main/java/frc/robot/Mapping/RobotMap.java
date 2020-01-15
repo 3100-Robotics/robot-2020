@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class RobotMap {
 
@@ -35,8 +37,10 @@ public class RobotMap {
     public static final int leftTriggerChannel = 2;
 
     //Sparks
-    public static final int driveLeft1Channel = 1;
-    public static final int driveRight1Channel = 2;
+    public static final int driveFrontLeftChannel = 3;
+    public static final int driveFrontRightChannel = 4;
+    public static final int driveBackLeftChannel = 1;
+    public static final int driveBackRightChannel = 2;
     public static final int auxMotorChannel = 3;
     public static final int auxMotorChannel2 = 4;
 
@@ -44,18 +48,25 @@ public class RobotMap {
     //Solenoids
 
 
-   // private static int PCM1Channel = 41;
+   // private static int PCM1Channel = 41; //Manually set Pneumatics if they don't work
     private static int pistonChannel1 = 4;
     private static int pistonChannel2 = 7;
 
 
     //INIT
 
+    
+
     public static XBoxStates driveControls = new XBoxStates(driveControlsChannel);
     public static XBoxStates techControls = new XBoxStates(techControlsChannel);
 
-    public static TalonFX leftDriveMotor = new TalonFX(driveLeft1Channel);
-    public static TalonFX rightDriveMotor = new TalonFX(driveRight1Channel);
+    //
+
+    public static TalonFX leftFrontDriveMotor = new TalonFX(driveFrontLeftChannel);
+    public static TalonFX rightFrontDriveMotor = new TalonFX(driveFrontRightChannel);
+    public static TalonFX leftBackDriveMotor = new TalonFX(driveBackLeftChannel);
+    public static TalonFX rightBackDriveMotor = new TalonFX(driveBackRightChannel);
+
     public static Spark auxMotor = new Spark(auxMotorChannel);
     public static Spark auxMotor2 = new Spark(auxMotorChannel2);
 
@@ -64,4 +75,4 @@ public class RobotMap {
     public static Solenoid secondPiston = new Solenoid(41, pistonChannel2);
     public static Solenoid test1Piston = new Solenoid(41,5);
 
-        }
+}

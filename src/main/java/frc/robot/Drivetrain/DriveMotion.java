@@ -1,8 +1,12 @@
 package frc.robot.Drivetrain;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.Mapping.RobotMap;
+import frc.robot.Drivetrain.Drive;
 
 
 //DriveMotion is a command that is used to run the drivetrain
@@ -11,10 +15,12 @@ public class DriveMotion extends Command {
 
     public DriveMotion() {
         super("DriveMotion");
-        requires(Robot.drive);
+    
 
     }
 
+
+    
 
     protected void initialize() {
 
@@ -29,10 +35,14 @@ public class DriveMotion extends Command {
             //Arcade Drive
         if (Robot.mode == 1){
 
-            Robot.drive.arcadeDrive(-RobotMap.driveControls.getLeftStickY(), -RobotMap.driveControls.getRightStickX());
+            
+        //    Robot.drive.arcadeDrive(-RobotMap.driveControls.getLeftStickY(), -RobotMap.driveControls.getRightStickX(), m_robotDrive);
+        
 
         }else if (Robot.mode == 2) {
             Robot.drive.tankDrive(RobotMap.driveControls.getLeftStickY(), -RobotMap.driveControls.getRightStickY());
+            
+            
         }
 
     }

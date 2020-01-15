@@ -7,9 +7,14 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.SPI.Port;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Drivetrain.Drive;
 import frc.robot.Mapping.OI;
 import frc.robot.Mapping.SpeedControllerSetUp;
@@ -27,17 +32,16 @@ public class Robot extends TimedRobot {
 
   //If mode = 1, Arcade
   //If mode = 2, Tank
-  public static int mode = 1;
+  public static int mode = 2;
 
 
   //Defining Subsystems
   public static OI oi;
   public static Drive drive;
+  private final Drive Drive = new frc.robot.Drivetrain.Drive();
   public static Shooter shooter;
   public static SpeedControllerSetUp speedcontrollersetup;
-
-
-
+  AHRS ahrs;
 
   //Commands to be used later
   public static boolean autoVal;
@@ -59,11 +63,28 @@ public class Robot extends TimedRobot {
 
 
       //Sets up the camera
-      CameraServer.getInstance().startAutomaticCapture();
+     // CameraServer.getInstance().startAutomaticCapture();
       //For limelight, use 10.31.0.11:5801
       //Gets what type of game is being played, not that important
       gameData = DriverStation.getInstance().getGameSpecificMessage();
 
+      try {
+        /***********************************************************************
+         * navX-MXP: - Communication via RoboRIO MXP (SPI, I2C) and USB. - See
+         * http://navx-mxp.kauailabs.com/guidance/selecting-an-interface.
+         * 
+         * navX-Micro: - Communication via I2C (RoboRIO MXP or Onboard) and USB. - See
+         * http://navx-micro.kauailabs.com/guidance/selecting-an-interface.
+         * 
+         * VMX-pi: - Communication via USB. - See
+         * https://vmx-pi.kauailabs.com/installation/roborio-installation/
+         * 
+         * Multiple navX-model devices on a single robot are supported.
+         ************************************************************************/
+        ahrs = new AHRS(SPI.Port.kMXP);
+      } catch (RuntimeException ex) {
+        DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+      }
 
       // ALWAYS INIT OI LAST
 
@@ -107,9 +128,9 @@ public class Robot extends TimedRobot {
   }
 
 
-//  public void disabledPeriodic() {
- //     Scheduler.getInstance().run();
-//  }
+  public void disabledPeriodic() {
+  
+  }
 
 
  
@@ -121,9 +142,7 @@ public class Robot extends TimedRobot {
       autoVal = true;
 
       // schedule the autonomous command (example)
-     // if (autonomousCommand != null) {
-  //        autonomousCommand.start();
-  //    }
+      
   }
 
   /**
@@ -143,7 +162,7 @@ public class Robot extends TimedRobot {
     //      if(autonomousCommand.isRunning()) {
     //          autonomousCommand.cancel();
           }
-      }
+      
     //  autoVal = false;
      // autonomousCommand.cancel();
 
@@ -155,16 +174,17 @@ public class Robot extends TimedRobot {
     //  if (autonomousCommand != null) {
    //       autonomousCommand.cancel();
    //   }
-
-
+   Scheduler.getInstance().run();
+    }
 
   /**
    * This function is called periodically during operator control.
    */
 
-//  public void teleopPeriodic() {
- //     Scheduler.getInstance().run();
- // }
+  public void teleopPeriodic() {
+
+      Scheduler.getInstance().run();
+ }
 
   /**
    * This function is called periodically during test mode.

@@ -27,9 +27,11 @@ public class ShooterRun extends Command {
 
     protected void execute() {
 
+        //System.out.println("Test");
+
             Robot.shooter.run();
-            RobotMap.leftDriveMotor.set(ControlMode.Velocity, 0.9 * 500.0 * 4096.0 / 600.0);
-        SmartDashboard.putNumber("Speed", RobotMap.leftDriveMotor.getSelectedSensorVelocity(0));
+            
+        SmartDashboard.putNumber("Speed", RobotMap.rightFrontDriveMotor.getSelectedSensorVelocity(0));
 
     }
 

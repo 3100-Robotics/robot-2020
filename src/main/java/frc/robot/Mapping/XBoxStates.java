@@ -75,5 +75,8 @@ public class XBoxStates extends Joystick {
         return (getPOV() == 90);
     }
 
+	public void arcadeDrive(double x, double y, double currentRotationRate, double angle) {
+	}
+
 
 }
