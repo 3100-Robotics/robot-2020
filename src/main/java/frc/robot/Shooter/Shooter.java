@@ -1,12 +1,12 @@
 package frc.robot.Shooter;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
+
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Mapping.RobotMap;
-import frc.robot.Mapping.XBoxStates;
 
-public class Shooter extends Subsystem {
+
+public class Shooter extends Subsystem{
 
     public Shooter(){
         super("Shooter");
@@ -18,6 +18,8 @@ public class Shooter extends Subsystem {
 
        // RobotMap.driveControls.getRightTrigger();
      //   RobotMap.rightDriveMotor.set(ControlMode.Velocity, 11000); //22000 is maximum, 100% power
+
+     System.out.println(RobotMap.leftFrontDriveMotor.getSensorCollection());
 
     }
 

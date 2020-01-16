@@ -8,17 +8,20 @@
 package frc.robot.Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Mapping.RobotMap;
+import frc.robot.Drivetrain.DriveMotion;
 import frc.robot.Mapping.Constants.DriveConstants;
 
 public class Drive extends SubsystemBase {
@@ -45,8 +48,8 @@ public class Drive extends SubsystemBase {
 
     public Drive() {
         super();
-        m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-        m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+        // m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+        // m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
 
         try {
             /***********************************************************************
@@ -67,7 +70,6 @@ public class Drive extends SubsystemBase {
         }
 
     }
-
 
     // Arcade Drive, one Joystick controls forwards/backwards, the other controls
     // turning
@@ -105,10 +107,10 @@ public class Drive extends SubsystemBase {
             limitRotate = rotateSpeed;
         }
 
-        // RobotMap.leftDriveMotor.set(ControlMode.PercentOutput, -limitRotate,
-        // DemandType.ArbitraryFeedForward, limitSpeed);
-        // RobotMap.rightDriveMotor.set(ControlMode.PercentOutput, +limitRotate,
-        // DemandType.ArbitraryFeedForward, limitSpeed);
+        RobotMap.leftFrontDriveMotor.set(ControlMode.PercentOutput, -limitRotate, DemandType.ArbitraryFeedForward,
+                limitSpeed);
+        RobotMap.rightFrontDriveMotor.set(ControlMode.PercentOutput, +limitRotate, DemandType.ArbitraryFeedForward,
+                limitSpeed);
 
     }
 
@@ -129,72 +131,25 @@ public class Drive extends SubsystemBase {
         // differentialDrive.tankDrive(leftSpeed, rightSpeed);
         // RobotMap.rightDriveMotor.set(ControlMode.PercentOutput,rightSpeed);
         // RobotMap.leftDriveMotor.set(ControlMode.PercentOutput,leftSpeed);
-
-        turnController = new PIDController(Kp, Ki, Kd);
-        turnController.setTolerance(kToleranceDegrees);
-        turnController.enableContinuousInput(-180.0f, 180.0f);
-
-        if (RobotMap.techControls.getButtonA()) {
-            /*
-             * While this button is held down, rotate to target angle. Since a Tank drive
-             * system cannot move forward simultaneously while rotating, all joystick input
-             * is ignored until this button is released.
-             */
-
-            System.out.println("Test");
-            turnController.setSetpoint(kTargetAngleDegrees);
-            // rotateToAngleRate = 90f; // This value will be updated in the pidWrite()
-            // method.
-            turnController.calculate(kTargetAngleDegrees);
-
-            final double leftStickValue = rotateToAngleRate;
-            final double rightStickValue = -rotateToAngleRate;
-            System.out.println(rotateToAngleRate);
-            // Robot.drive.tankDrive(leftStickValue, rightStickValue);
-
-            double error = 90 - ahrs.getAngle();
-            System.out.println(ahrs.getAngle());
-            System.out.println(error);
-            Robot.drive.tankDrive(Kp * error, -Kp * error);
-
-        } else if (RobotMap.techControls.getButtonB()) {
-            /*
-             * "Zero" the yaw (whatever direction the sensor is pointing now will become the
-             * new "Zero" degrees.
-             */
-            System.out.println("Test2");
-            ahrs.zeroYaw();
-
-        } else {
-            System.out.println("Test3");
-            /* Standard tank drive, no driver assistance. */
-            RobotMap.leftFrontDriveMotor.set(ControlMode.PercentOutput, leftSpeed);
-            RobotMap.rightFrontDriveMotor.set(ControlMode.PercentOutput, rightSpeed);
-
-        }
-        Timer.delay(0.005);
-
     }
 
     // The left-side drive encoder
-    private final Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0],
-            DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
-
-    // The right-side drive encoder
-    private final Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0],
-            DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
+    // private final Encoder m_leftEncoder = new
+    // Encoder(DriveConstants.kLeftEncoderPorts[0],
+    // DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
 
     // The gyro sensor
     private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
-
-    
+    private CANCoder m_leftEncoder = new CANCoder(3);
+    private CANCoder m_rightEncoder = new CANCoder(4);
+    public Object setDefaultCommand;
 
     /**
      * Resets the drive encoders to currently read a position of 0.
      */
     public void resetEncoders() {
-        m_leftEncoder.reset();
-        m_rightEncoder.reset();
+        m_leftEncoder.setPosition(0);
+        m_rightEncoder.setPosition(0);
     }
 
     /**
@@ -203,7 +158,7 @@ public class Drive extends SubsystemBase {
      * @return the average of the two encoder readings
      */
     public double getAverageEncoderDistance() {
-        return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+        return (m_leftEncoder.getPosition() + m_rightEncoder.getPosition()) / 2.0;
     }
 
     /**
@@ -211,7 +166,7 @@ public class Drive extends SubsystemBase {
      *
      * @return the left drive encoder
      */
-    public Encoder getLeftEncoder() {
+    public CANCoder getLeftEncoder() {
         return m_leftEncoder;
     }
 
@@ -220,7 +175,7 @@ public class Drive extends SubsystemBase {
      *
      * @return the right drive encoder
      */
-    public Encoder getRightEncoder() {
+    public CANCoder getRightEncoder() {
         return m_rightEncoder;
     }
 
@@ -259,8 +214,9 @@ public class Drive extends SubsystemBase {
         return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 
-    // The command won't work if you only bump the stick a little, a deadband in the
-    // middle
+    // // The command won't work if you only bump the stick a little, a deadband in
+    // the
+    // // middle
     private double deadband(final double input) {
         if (Math.abs(input) < 0.2) {
             return 0;
@@ -269,11 +225,12 @@ public class Drive extends SubsystemBase {
         }
     }
 
-    // Sets the default on startup command to be DriveMotion
+    // Sets the default on startup command to be DriveMotion'
+
     public void initDefaultCommand() {
         setDefaultCommand((Command) new DriveMotion());
     }
-
+   
    
 
 

@@ -5,6 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.Mapping.OI;
 import frc.robot.Mapping.RobotMap;
 import frc.robot.Drivetrain.Drive;
 
@@ -36,11 +37,11 @@ public class DriveMotion extends Command {
         if (Robot.mode == 1){
 
             
-        //    Robot.drive.arcadeDrive(-RobotMap.driveControls.getLeftStickY(), -RobotMap.driveControls.getRightStickX(), m_robotDrive);
+            Robot.drive.arcadeDrive(-OI.m_driveController.getLeftStickY(), -OI.m_driveController.getRightStickX());
         
 
         }else if (Robot.mode == 2) {
-            Robot.drive.tankDrive(RobotMap.driveControls.getLeftStickY(), -RobotMap.driveControls.getRightStickY());
+            Robot.drive.tankDrive(OI.m_driveController.getLeftStickY(), -OI.m_driveController.getRightStickY());
             
             
         }
@@ -63,5 +64,3 @@ public class DriveMotion extends Command {
         super.interrupted();
     }
 }
-
-

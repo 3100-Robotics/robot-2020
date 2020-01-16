@@ -4,15 +4,13 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+
 
 public class RobotMap {
 
     //Joystick
 
-    public static int driveControlsChannel = 0;
-    public static int techControlsChannel = 1;
+ 
 
 
     //     D R I V E R   B U T T O N S
@@ -55,12 +53,7 @@ public class RobotMap {
 
     //INIT
 
-    
 
-    public static XBoxStates driveControls = new XBoxStates(driveControlsChannel);
-    public static XBoxStates techControls = new XBoxStates(techControlsChannel);
-
-    //
 
     public static TalonFX leftFrontDriveMotor = new TalonFX(driveFrontLeftChannel);
     public static TalonFX rightFrontDriveMotor = new TalonFX(driveFrontRightChannel);
@@ -70,9 +63,9 @@ public class RobotMap {
     public static Spark auxMotor = new Spark(auxMotorChannel);
     public static Spark auxMotor2 = new Spark(auxMotorChannel2);
 
-    public static Solenoid wallPiston = new Solenoid(41, pistonChannel1);
-    public static Solenoid testPiston = new Solenoid(41,6);
-    public static Solenoid secondPiston = new Solenoid(41, pistonChannel2);
-    public static Solenoid test1Piston = new Solenoid(41,5);
+    // public static Solenoid wallPiston = new Solenoid(41, pistonChannel1);
+    // public static Solenoid testPiston = new Solenoid(41,6);
+    // public static Solenoid secondPiston = new Solenoid(41, pistonChannel2);
+    // public static Solenoid test1Piston = new Solenoid(41,5);
 
 }

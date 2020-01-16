@@ -1,6 +1,5 @@
 package frc.robot.Mapping;
 
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 
 public final class Constants {
 	public static final class DriveConstants{

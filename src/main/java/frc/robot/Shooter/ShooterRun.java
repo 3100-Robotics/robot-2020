@@ -1,13 +1,16 @@
 package frc.robot.Shooter;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.Mapping.RobotMap;
+import frc.robot.Mapping.SpeedControllerSetUp;
 
 public class ShooterRun extends Command {
+
+    CANCoder m_leftEncoder = new CANCoder(3);
 
 
     public ShooterRun() {
@@ -31,7 +34,8 @@ public class ShooterRun extends Command {
 
             Robot.shooter.run();
             
-        SmartDashboard.putNumber("Speed", RobotMap.rightFrontDriveMotor.getSelectedSensorVelocity(0));
+  
+        
 
     }
 

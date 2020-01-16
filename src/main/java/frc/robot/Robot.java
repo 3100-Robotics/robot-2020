@@ -9,12 +9,12 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.SPI.Port;
+
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Drivetrain.Drive;
 import frc.robot.Mapping.OI;
 import frc.robot.Mapping.SpeedControllerSetUp;
@@ -38,12 +38,12 @@ public class Robot extends TimedRobot {
   //Defining Subsystems
   public static OI oi;
   public static Drive drive;
-  private final Drive Drive = new frc.robot.Drivetrain.Drive();
   public static Shooter shooter;
   public static SpeedControllerSetUp speedcontrollersetup;
   AHRS ahrs;
 
   //Commands to be used later
+  private Command m_autonomousCommand;
   public static boolean autoVal;
   public static String gameData;
   //private Command autonomousCommand;
@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
 
 
       //Initalizes the drive subsystem
-      drive = new Drive();
+      drive = new frc.robot.Drivetrain.Drive();
       shooter = new Shooter();
 
 
@@ -136,6 +136,8 @@ public class Robot extends TimedRobot {
  
   public void autonomousInit() {
 
+    m_autonomousCommand = OI.getAutonomousCommand();
+
    //   autonomousCommand = new AutonomousMaster(autoGroup.getSelected(), gameData, autoSide.getSelected());
    //   autonomousCommand.start();
       //Tells the autonomous command to run
@@ -158,22 +160,14 @@ public class Robot extends TimedRobot {
  
   public void teleopInit() {
 
-      if(autoVal) {
-    //      if(autonomousCommand.isRunning()) {
-    //          autonomousCommand.cancel();
-          }
-      
-    //  autoVal = false;
-     // autonomousCommand.cancel();
-
 
       // This makes sure that the autonomous stops running when
       // teleop starts running. If you want the autonomous to
       // continue until interrupted by another command, remove
       // this line or comment it out.
-    //  if (autonomousCommand != null) {
-   //       autonomousCommand.cancel();
-   //   }
+      if (m_autonomousCommand != null) {
+          m_autonomousCommand.cancel();
+      }
    Scheduler.getInstance().run();
     }
 
