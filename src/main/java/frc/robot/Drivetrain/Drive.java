@@ -14,17 +14,24 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+
 import frc.robot.Mapping.RobotMap;
-import frc.robot.Drivetrain.DriveMotion;
+
 import frc.robot.Mapping.Constants.DriveConstants;
 
 public class Drive extends SubsystemBase {
+
+ 
+
+
 
     PIDController turnController;
     private double limitSpeed = 0;
@@ -79,7 +86,7 @@ public class Drive extends SubsystemBase {
         moveSpeed = deadband(moveSpeed);
         rotateSpeed = deadband(rotateSpeed);
 
-        scaleSpeed = moveSpeed < 0 ? -0.7 : 0.7;
+        scaleSpeed = moveSpeed < 0 ? -0.8 : 0.8;
         scaleRotate = rotateSpeed < 0 ? -0.6 : 0.6;
 
         moveSpeed *= scaleSpeed * moveSpeed;
@@ -142,7 +149,6 @@ public class Drive extends SubsystemBase {
     private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
     private CANCoder m_leftEncoder = new CANCoder(3);
     private CANCoder m_rightEncoder = new CANCoder(4);
-    public Object setDefaultCommand;
 
     /**
      * Resets the drive encoders to currently read a position of 0.
@@ -185,9 +191,9 @@ public class Drive extends SubsystemBase {
      *
      * @param maxOutput the maximum output to which the drive will be constrained
      */
-    public void setMaxOutput(final double maxOutput) {
-        Robot.drive.setMaxOutput(maxOutput);
-    }
+    //public void setMaxOutput(final double maxOutput) {
+   //      .setMaxOutput(maxOutput);
+   // }
 
     /**
      * Zeroes the heading of the robot.
@@ -224,14 +230,14 @@ public class Drive extends SubsystemBase {
             return input;
         }
     }
+ 
+ @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
 
-    // Sets the default on startup command to be DriveMotion'
+  
 
-    public void initDefaultCommand() {
-        setDefaultCommand((Command) new DriveMotion());
-    }
-   
-   
 
+  }
 
 }

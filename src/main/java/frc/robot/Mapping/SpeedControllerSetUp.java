@@ -15,10 +15,10 @@ public class SpeedControllerSetUp {
         RobotMap.leftBackDriveMotor.configFactoryDefault();
         RobotMap.rightBackDriveMotor.configFactoryDefault();
 
-        RobotMap.leftFrontDriveMotor.setInverted(true);
-        RobotMap.rightFrontDriveMotor.setInverted(false);
-        RobotMap.leftBackDriveMotor.setInverted(true);
-        RobotMap.rightBackDriveMotor.setInverted(false);
+        RobotMap.leftFrontDriveMotor.setInverted(false);
+        RobotMap.rightFrontDriveMotor.setInverted(true);
+        RobotMap.leftBackDriveMotor.setInverted(false);
+        RobotMap.rightBackDriveMotor.setInverted(true);
 
         RobotMap.leftFrontDriveMotor.setNeutralMode(NeutralMode.Brake);
         RobotMap.rightFrontDriveMotor.setNeutralMode(NeutralMode.Brake);
@@ -28,11 +28,11 @@ public class SpeedControllerSetUp {
         RobotMap.leftBackDriveMotor.follow(RobotMap.leftFrontDriveMotor);
         RobotMap.rightBackDriveMotor.follow(RobotMap.rightFrontDriveMotor);
 
-        RobotMap.rightFrontDriveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
-        RobotMap.rightFrontDriveMotor.config_kP(0, 0.06);
-        RobotMap.rightFrontDriveMotor.config_kD(0, 0.0001 );
-        RobotMap.rightFrontDriveMotor.config_kI(0, 0); //DON'T CHANGE
-        RobotMap.rightFrontDriveMotor.config_kF(0, 1023.0/22425.0);
+        // RobotMap.rightFrontDriveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
+        // RobotMap.rightFrontDriveMotor.config_kP(0, 0.06);
+        // RobotMap.rightFrontDriveMotor.config_kD(0, 0.0001 );
+        // RobotMap.rightFrontDriveMotor.config_kI(0, 0); //DON'T CHANGE
+        // RobotMap.rightFrontDriveMotor.config_kF(0, 1023.0/22425.0);
 
         
                    

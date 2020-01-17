@@ -5,6 +5,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
+
 import frc.robot.Mapping.RobotMap;
 import frc.robot.Mapping.SpeedControllerSetUp;
 
@@ -15,7 +16,7 @@ public class ShooterRun extends Command {
 
     public ShooterRun() {
         super("ShooterRun");
-        requires(Robot.shooter);
+      //  requires(Shooter);
 
     }
 
@@ -32,7 +33,7 @@ public class ShooterRun extends Command {
 
         //System.out.println("Test");
 
-            Robot.shooter.run();
+         //   OI.m_robotShooter.run();
             
   
         

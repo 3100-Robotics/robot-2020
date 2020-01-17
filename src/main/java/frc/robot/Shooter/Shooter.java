@@ -1,15 +1,14 @@
 package frc.robot.Shooter;
 
-
-
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Mapping.RobotMap;
 
 
-public class Shooter extends Subsystem{
+public class Shooter extends SubsystemBase{
 
     public Shooter(){
-        super("Shooter");
+        super();
     }
 
     public void run() {
@@ -19,13 +18,9 @@ public class Shooter extends Subsystem{
        // RobotMap.driveControls.getRightTrigger();
      //   RobotMap.rightDriveMotor.set(ControlMode.Velocity, 11000); //22000 is maximum, 100% power
 
-     System.out.println(RobotMap.leftFrontDriveMotor.getSensorCollection());
+     
 
     }
 
-    protected void initDefaultCommand() {
-
-        setDefaultCommand(new ShooterRun());
-
-    }
+    
 }
