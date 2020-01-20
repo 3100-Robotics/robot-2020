@@ -10,28 +10,28 @@ package frc.robot.Drivetrain;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
-import frc.robot.Mapping.RobotMap;
+import static frc.robot.Mapping.Constants.*;
 
 import frc.robot.Mapping.Constants.DriveConstants;
 
 public class Drive extends SubsystemBase {
-
- 
-
-
 
     PIDController turnController;
     private double limitSpeed = 0;
@@ -44,37 +44,27 @@ public class Drive extends SubsystemBase {
     private final double rotateAccelerationLimit = 0.08; // Velocity - Tune for different drivetrain, if it's too low,
                                                          // sluggish
 
+                                                        
+
+
     static final double Kp = 1.00;
     static final double Ki = 0.00;
     static final double Kd = 0.00;
     double rotateToAngleRate;
-    AHRS ahrs;
+    AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+    Gyro test;
+    private Encoder m_leftEncoder, m_rightEncoder;
 
     static final double kToleranceDegrees = 2.0f;
     static final double kTargetAngleDegrees = 90.0f;
 
     public Drive() {
-        super();
-        // m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-        // m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
 
-        try {
-            /***********************************************************************
-             * navX-MXP: - Communication via RoboRIO MXP (SPI, I2C) and USB. - See
-             * http://navx-mxp.kauailabs.com/guidance/selecting-an-interface.
-             * 
-             * navX-Micro: - Communication via I2C (RoboRIO MXP or Onboard) and USB. - See
-             * http://navx-micro.kauailabs.com/guidance/selecting-an-interface.
-             * 
-             * VMX-pi: - Communication via USB. - See
-             * https://vmx-pi.kauailabs.com/installation/roborio-installation/
-             * 
-             * Multiple navX-model devices on a single robot are supported.
-             ************************************************************************/
-            ahrs = new AHRS(SPI.Port.kMXP);
-        } catch (RuntimeException ex) {
-            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-        }
+    // Since encoders return pulses, set the proper distance using wheel diameter.
+    m_leftEncoder = new Encoder(leftEncoderPort, leftEncoderPort + 1);
+    m_leftEncoder.setDistancePerPulse(2048);
+    m_rightEncoder = new Encoder(rightEncoderPort, rightEncoderPort + 1);
+    m_rightEncoder.setDistancePerPulse(2048);
 
     }
 
@@ -114,9 +104,10 @@ public class Drive extends SubsystemBase {
             limitRotate = rotateSpeed;
         }
 
-        RobotMap.leftFrontDriveMotor.set(ControlMode.PercentOutput, -limitRotate, DemandType.ArbitraryFeedForward,
+
+        frontLeft.set(ControlMode.PercentOutput, -limitRotate, DemandType.ArbitraryFeedForward,
                 limitSpeed);
-        RobotMap.rightFrontDriveMotor.set(ControlMode.PercentOutput, +limitRotate, DemandType.ArbitraryFeedForward,
+        frontRight.set(ControlMode.PercentOutput, +limitRotate, DemandType.ArbitraryFeedForward,
                 limitSpeed);
 
     }
@@ -129,33 +120,15 @@ public class Drive extends SubsystemBase {
         rightSpeed = deadband(rightSpeed);
 
         limitSpeed = leftSpeed < 0 ? -0.8 : 0.8;
-        limitRotate = rightSpeed < 0 ? -0.8 : 0.8;
+        limitSpeed = rightSpeed < 0 ? -0.8 : 0.8;
 
         leftSpeed *= limitSpeed * leftSpeed;
-        rightSpeed *= limitRotate * rightSpeed;
+        rightSpeed *= limitSpeed * rightSpeed;
 
         // Tells the program to run the driveTank
         // differentialDrive.tankDrive(leftSpeed, rightSpeed);
-        // RobotMap.rightDriveMotor.set(ControlMode.PercentOutput,rightSpeed);
-        // RobotMap.leftDriveMotor.set(ControlMode.PercentOutput,leftSpeed);
-    }
-
-    // The left-side drive encoder
-    // private final Encoder m_leftEncoder = new
-    // Encoder(DriveConstants.kLeftEncoderPorts[0],
-    // DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
-
-    // The gyro sensor
-    private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
-    private CANCoder m_leftEncoder = new CANCoder(3);
-    private CANCoder m_rightEncoder = new CANCoder(4);
-
-    /**
-     * Resets the drive encoders to currently read a position of 0.
-     */
-    public void resetEncoders() {
-        m_leftEncoder.setPosition(0);
-        m_rightEncoder.setPosition(0);
+         frontRight.set(ControlMode.PercentOutput,rightSpeed);
+         frontLeft.set(ControlMode.PercentOutput,leftSpeed);
     }
 
     /**
@@ -164,26 +137,21 @@ public class Drive extends SubsystemBase {
      * @return the average of the two encoder readings
      */
     public double getAverageEncoderDistance() {
-        return (m_leftEncoder.getPosition() + m_rightEncoder.getPosition()) / 2.0;
+        return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
     }
 
-    /**
-     * Gets the left drive encoder.
-     *
-     * @return the left drive encoder
-     */
-    public CANCoder getLeftEncoder() {
-        return m_leftEncoder;
-    }
-
-    /**
-     * Gets the right drive encoder.
-     *
-     * @return the right drive encoder
-     */
-    public CANCoder getRightEncoder() {
-        return m_rightEncoder;
-    }
+    public double getLeftDistance() {
+        return m_leftEncoder.getDistance();
+      }
+    
+      public double getRightDistance() {
+        return m_rightEncoder.getDistance();
+      }
+    
+      public void resetEncoders() {
+        m_leftEncoder.reset();
+        m_rightEncoder.reset();
+      }
 
     /**
      * Sets the max output of the drive. Useful for scaling the drive to drive more
@@ -191,9 +159,9 @@ public class Drive extends SubsystemBase {
      *
      * @param maxOutput the maximum output to which the drive will be constrained
      */
-    //public void setMaxOutput(final double maxOutput) {
-   //      .setMaxOutput(maxOutput);
-   // }
+    public void setMaxOutput(final double maxOutput) {
+         setMaxOutput(maxOutput);
+    }
 
     /**
      * Zeroes the heading of the robot.
@@ -235,8 +203,10 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-  
-
+    System.out.println(m_gyro.isRotating());
+  //  System.out.println(m_gyro.getPitch());
+  //  System.out.println(m_gyro.getRate());
+  //  System.out.println(m_gyro.getRoll());
 
   }
 

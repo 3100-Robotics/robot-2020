@@ -4,29 +4,30 @@ package frc.robot.Mapping;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.CANCoder;
+import static frc.robot.Mapping.Constants.*;
 
 public class SpeedControllerSetUp {
 
 
     public void configure(){
 
-        RobotMap.leftFrontDriveMotor.configFactoryDefault();
-        RobotMap.rightFrontDriveMotor.configFactoryDefault();
-        RobotMap.leftBackDriveMotor.configFactoryDefault();
-        RobotMap.rightBackDriveMotor.configFactoryDefault();
+        frontLeft.configFactoryDefault();
+        backLeft.configFactoryDefault();
+        frontRight.configFactoryDefault();
+        backRight.configFactoryDefault();
 
-        RobotMap.leftFrontDriveMotor.setInverted(false);
-        RobotMap.rightFrontDriveMotor.setInverted(true);
-        RobotMap.leftBackDriveMotor.setInverted(false);
-        RobotMap.rightBackDriveMotor.setInverted(true);
+        frontLeft.setInverted(false);
+        backLeft.setInverted(false);
+        frontRight.setInverted(true);
+        backRight.setInverted(true);
 
-        RobotMap.leftFrontDriveMotor.setNeutralMode(NeutralMode.Brake);
-        RobotMap.rightFrontDriveMotor.setNeutralMode(NeutralMode.Brake);
-        RobotMap.leftBackDriveMotor.setNeutralMode(NeutralMode.Brake);
-        RobotMap.rightBackDriveMotor.setNeutralMode(NeutralMode.Brake);
+        frontLeft.setNeutralMode(NeutralMode.Brake);
+        frontRight.setNeutralMode(NeutralMode.Brake);
+        backLeft.setNeutralMode(NeutralMode.Brake);
+        backRight.setNeutralMode(NeutralMode.Brake);
 
-        RobotMap.leftBackDriveMotor.follow(RobotMap.leftFrontDriveMotor);
-        RobotMap.rightBackDriveMotor.follow(RobotMap.rightFrontDriveMotor);
+        backLeft.follow(frontLeft);
+        backRight.follow(frontRight);
 
         // RobotMap.rightFrontDriveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
         // RobotMap.rightFrontDriveMotor.config_kP(0, 0.06);

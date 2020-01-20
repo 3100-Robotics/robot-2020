@@ -1,16 +1,23 @@
 package frc.robot.Commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import java.util.Set;
 
-public class Test extends Command {
 
-    public Test(){
+import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.Mapping.RobotContainer;
+
+public class Test extends CommandBase{
+
+    public Test() {
+
+        RobotContainer.ahrs.reset();
 
     }
+
     @Override
-    protected boolean isFinished() {
+    public Set<Subsystem> getRequirements() {
         // TODO Auto-generated method stub
-        return false;
+        return null;
     }
 
 

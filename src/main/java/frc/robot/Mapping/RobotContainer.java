@@ -3,6 +3,8 @@ package frc.robot.Mapping;
 
 import java.lang.module.ModuleDescriptor.Requires;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -12,29 +14,37 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Drivetrain.Drive;
 
 import frc.robot.Drivetrain.DefaultDrive;
-import frc.robot.Mapping.XBoxStates;
 import frc.robot.Mapping.Constants.DriveConstants;
 import frc.robot.Shooter.Shooter;
 import frc.robot.Robot;
+import frc.robot.Commands.Test;
 import frc.robot.Commands.TurnToAngle;
 
 public class RobotContainer {
   
   private final Drive m_robotDrive = new Drive();
   private final Shooter m_shooter = new Shooter();
+
+  public static AHRS ahrs = new AHRS(SPI.Port.kMXP); 
  
 
   // The driver's controller
   public final static XboxController m_driveController = new XboxController(0);
   public final static XboxController m_techController = new XboxController(1);
 
-  public static JoystickButton turn = new JoystickButton(RobotContainer.m_driveController, RobotMap.xButtonChannel);
+
+  private final JoystickButton turnToAngle = new JoystickButton(m_driveController, Constants.xButtonChannel);
+  private final JoystickButton reset = new JoystickButton(m_driveController, Constants.aButtonChannel);
+  private final JoystickButton halfSpeed = new JoystickButton(m_driveController, Constants.rightBumperChannel);
+
+
 
   /**
-   * The container for the robot.  Contains subsystems,(RobotContainer devices, and commands.
+   * The container for the robot.  Contains subsystems, RobotContainer devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
@@ -49,14 +59,9 @@ public class RobotContainer {
             m_robotDrive,
             () -> -m_driveController.getY(GenericHID.Hand.kLeft),
             () -> -m_driveController.getX(GenericHID.Hand.kRight)));
-
-    // Add commands to the autonomous command chooser
    
   }
 
-
-
-  
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -65,29 +70,12 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-   // Drive at half speed when the right bumper is held
-    //new JoystickButton(m_driveController, RobotMap.leftBumperChannel)
-    //    .whenPressed(() -> m_robotDrive.setMaxOutput(0.5))
-     //   .whenReleased(() -> m_robotDrive.setMaxOutput(1));
 
-    // Stabilize robot to drive straight with gyro when left bumper is held
-    new JoystickButton(m_driveController, RobotMap.rightBumperChannel).whenHeld(new PIDCommand(
-        new PIDController(DriveConstants.kStabilizationP, DriveConstants.kStabilizationI,
-                          DriveConstants.kStabilizationD),
-        // Close the loop on the turn rate
-        m_robotDrive::getTurnRate,
-        // Setpoint is 0
-        0,
-        // Pipe the output to the turning controls
-        output -> m_robotDrive.arcadeDrive(m_driveController.getY(), output),
-        // Require the robot drive
-        m_robotDrive));
+    turnToAngle.whenPressed(new TurnToAngle(45, m_robotDrive).withTimeout(5));
+    reset.whenPressed(new Test());
+    halfSpeed.whenPressed(() -> m_robotDrive.setMaxOutput(0.5));
+    halfSpeed.whenReleased(() -> m_robotDrive.setMaxOutput(1));
 
-    // Turn to 90 degrees when the 'X' button is pressed, with a 5 second timeout
-    new JoystickButton(m_driveController, RobotMap.xButtonChannel)
-        .whenPressed(new TurnToAngle(90, m_robotDrive).withTimeout(5));
-
-   
   }
 
 
