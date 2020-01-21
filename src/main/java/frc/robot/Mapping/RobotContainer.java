@@ -1,45 +1,37 @@
 
 package frc.robot.Mapping;
 
-import java.lang.module.ModuleDescriptor.Requires;
-
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Drivetrain.Drive;
-
-import frc.robot.Drivetrain.DefaultDrive;
-import frc.robot.Mapping.Constants.DriveConstants;
 import frc.robot.Shooter.Shooter;
+import frc.robot.Drivetrain.DefaultDrive;
+//import frc.robot.Shooter.Shooter;
 import frc.robot.Robot;
-import frc.robot.Commands.Test;
-import frc.robot.Commands.TurnToAngle;
+import frc.robot.Commands.*;
 
 public class RobotContainer {
   
   private final Drive m_robotDrive = new Drive();
-  private final Shooter m_shooter = new Shooter();
+  public final static Shooter m_shooter = new Shooter();
 
-  public static AHRS ahrs = new AHRS(SPI.Port.kMXP); 
+  //public static AHRS ahrs = new AHRS(SPI.Port.kMXP); 
+  
  
 
-  // The driver's controller
-  public final static XboxController m_driveController = new XboxController(0);
-  public final static XboxController m_techController = new XboxController(1);
+  // DRIVE CONTROLLER
+  public final static XboxController m_driveController = new XboxController(Constants.DriveControllerPort);
+  // TECH CONTROLLER
+  public final static XboxController m_techController = new XboxController(Constants.TechControllerPort);
 
 
   private final JoystickButton turnToAngle = new JoystickButton(m_driveController, Constants.xButtonChannel);
   private final JoystickButton reset = new JoystickButton(m_driveController, Constants.aButtonChannel);
   private final JoystickButton halfSpeed = new JoystickButton(m_driveController, Constants.rightBumperChannel);
+  private final JoystickButton test = new JoystickButton(m_driveController, Constants.yButtonChannel);
 
 
 
@@ -72,9 +64,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     turnToAngle.whenPressed(new TurnToAngle(45, m_robotDrive).withTimeout(5));
-    reset.whenPressed(new Test());
+    reset.whenPressed(new Reset());
     halfSpeed.whenPressed(() -> m_robotDrive.setMaxOutput(0.5));
     halfSpeed.whenReleased(() -> m_robotDrive.setMaxOutput(1));
+    test.toggleWhenPressed(new Test());
 
   }
 

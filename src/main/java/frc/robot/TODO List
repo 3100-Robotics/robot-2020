@@ -1,0 +1,7 @@
+What I have to do:
+
+    1. Get TurnToAngle tuned and working
+    2. Test Encoders and make sure that they work
+    3. Develop basic autonomous commands using encoders and gyro
+    4. Check out Jacky's Pathing and see if I can implement Spline Pathing
+    5. Stay Sane

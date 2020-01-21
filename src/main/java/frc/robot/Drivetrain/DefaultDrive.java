@@ -7,8 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Drivetrain.Drive;
 
 /**
- * A command to drive the robot with joystick input (passed in as {@link DoubleSupplier}s). Written
- * explicitly for pedagogical purposes - actual code should inline a command this simple with {@link
+ * Code should inline a command this simple with {@link
  * edu.wpi.first.wpilibj2.command.RunCommand}.
  */
 public class DefaultDrive extends CommandBase {

@@ -1,18 +1,17 @@
 package frc.robot.Commands;
 
-import java.util.function.DoubleConsumer;
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Drivetrain.Drive;
-import frc.robot.Mapping.Constants.DriveConstants;
+import frc.robot.Mapping.Constants;
+
 
 /**
  * A command that will turn the robot to the specified angle.
  */
 public class TurnToAngle extends PIDCommand {
+
+//TODO: Tune PID for TurnToAngle to work
 
   /**
   //  * Turns to robot to the specified angle.
@@ -22,7 +21,7 @@ public class TurnToAngle extends PIDCommand {
   //  */
   public TurnToAngle(double targetAngleDegrees, Drive drive) { //Drive drive
     super(
-        new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD),
+        new PIDController(Constants.kTurnP, Constants.kTurnI, Constants.kTurnD),
         // Close loop on heading
         drive::getHeading,
         // Set reference to target
@@ -37,7 +36,8 @@ public class TurnToAngle extends PIDCommand {
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
     getController()
-        .setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
+        .setTolerance(Constants.kTurnToleranceDeg, Constants.kTurnRateToleranceDegPerS);
+
   }
 
   @Override

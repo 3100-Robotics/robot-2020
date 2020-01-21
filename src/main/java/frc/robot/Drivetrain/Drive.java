@@ -9,27 +9,11 @@ package frc.robot.Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-
 import static frc.robot.Mapping.Constants.*;
-
-import frc.robot.Mapping.Constants.DriveConstants;
 
 public class Drive extends SubsystemBase {
 
@@ -44,21 +28,26 @@ public class Drive extends SubsystemBase {
     private final double rotateAccelerationLimit = 0.08; // Velocity - Tune for different drivetrain, if it's too low,
                                                          // sluggish
 
-                                                        
-
-
     static final double Kp = 1.00;
     static final double Ki = 0.00;
     static final double Kd = 0.00;
     double rotateToAngleRate;
-    AHRS m_gyro = new AHRS(SPI.Port.kMXP);
-    Gyro test;
-    private Encoder m_leftEncoder, m_rightEncoder;
+    // AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+  
+    
+    
+    
+    
+    private final Encoder m_leftEncoder, m_rightEncoder;
 
     static final double kToleranceDegrees = 2.0f;
     static final double kTargetAngleDegrees = 90.0f;
 
     public Drive() {
+
+        zeroHeading();
+        Robot.m_gyro.zeroYaw();
+
 
     // Since encoders return pulses, set the proper distance using wheel diameter.
     m_leftEncoder = new Encoder(leftEncoderPort, leftEncoderPort + 1);
@@ -69,7 +58,7 @@ public class Drive extends SubsystemBase {
     }
 
     // Arcade Drive, one Joystick controls forwards/backwards, the other controls
-    // turning
+    // TODO: Check to see if the arcadeDrive functions are actually being used
     public void arcadeDrive(double moveSpeed, double rotateSpeed) {
 
         // Limits for speed, using quadratics and max/min
@@ -77,7 +66,7 @@ public class Drive extends SubsystemBase {
         rotateSpeed = deadband(rotateSpeed);
 
         scaleSpeed = moveSpeed < 0 ? -0.8 : 0.8;
-        scaleRotate = rotateSpeed < 0 ? -0.6 : 0.6;
+        scaleRotate = rotateSpeed < 0 ? -0.3 : 0.3;
 
         moveSpeed *= scaleSpeed * moveSpeed;
         rotateSpeed *= scaleRotate * rotateSpeed;
@@ -87,20 +76,22 @@ public class Drive extends SubsystemBase {
         // Checks to see if it's greater than the limit for acceleration
 
         // M O V E
-        if (moveSpeed - limitSpeed > moveAccelerationLimit) {
+        double bSpeed = moveSpeed - limitSpeed;
+        if (bSpeed > moveAccelerationLimit) {
             limitSpeed += moveAccelerationLimit;
-        } else if (moveSpeed - limitSpeed < -moveAccelerationLimit) {
+        } else if (bSpeed < -moveAccelerationLimit) {
             limitSpeed -= moveAccelerationLimit;
-        } else if (moveSpeed - limitSpeed <= moveAccelerationLimit) {
+        } else if (bSpeed <= moveAccelerationLimit) {
             limitSpeed = moveSpeed;
         }
 
         // R O T A T E
-        if (rotateSpeed - limitRotate > rotateAccelerationLimit) {
+        double bRotate = rotateSpeed - limitRotate;
+        if (bRotate > rotateAccelerationLimit) {
             limitRotate += rotateAccelerationLimit;
-        } else if (rotateSpeed - limitRotate < -rotateAccelerationLimit) {
+        } else if (bRotate < -rotateAccelerationLimit) {
             limitRotate -= rotateAccelerationLimit;
-        } else if (rotateSpeed - limitRotate <= rotateAccelerationLimit) {
+        } else if (bRotate <= rotateAccelerationLimit) {
             limitRotate = rotateSpeed;
         }
 
@@ -167,7 +158,7 @@ public class Drive extends SubsystemBase {
      * Zeroes the heading of the robot.
      */
     public void zeroHeading() {
-        m_gyro.reset();
+        Robot.m_gyro.reset();
     }
 
     /**
@@ -176,7 +167,8 @@ public class Drive extends SubsystemBase {
      * @return the robot's heading in degrees, from 180 to 180
      */
     public double getHeading() {
-        return Math.IEEEremainder(m_gyro.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+        return Math.IEEEremainder(Robot.m_gyro.getAngle(), 360) * (kGyroReversed ? -1.0 : 1.0);
+        //return (Robot.m_gyro.getAngle());
     }
 
     /**
@@ -185,12 +177,14 @@ public class Drive extends SubsystemBase {
      * @return The turn rate of the robot, in degrees per second
      */
     public double getTurnRate() {
-        return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+        return Robot.m_gyro.getRate() * (kGyroReversed ? -1.0 : 1.0);
     }
 
-    // // The command won't work if you only bump the stick a little, a deadband in
-    // the
-    // // middle
+    /* 
+     * 
+     * Prevents the robot from moving with a small amount of input
+     * 
+      */
     private double deadband(final double input) {
         if (Math.abs(input) < 0.2) {
             return 0;
@@ -198,16 +192,15 @@ public class Drive extends SubsystemBase {
             return input;
         }
     }
+    
  
  @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
-    System.out.println(m_gyro.isRotating());
-  //  System.out.println(m_gyro.getPitch());
-  //  System.out.println(m_gyro.getRate());
-  //  System.out.println(m_gyro.getRoll());
-
+   // System.out.println(m_gyro.isRotating());
+   // System.out.println(Robot.m_gyro.getAngle());
+   // System.out.println(getHeading());
   }
 
 }

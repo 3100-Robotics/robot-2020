@@ -12,16 +12,11 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
-
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Drivetrain.Drive;
-
 import frc.robot.Mapping.RobotContainer;
 import frc.robot.Mapping.SpeedControllerSetUp;
-import frc.robot.Shooter.Shooter;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,75 +35,69 @@ public class Robot extends TimedRobot {
 
   //Defining Subsystems
 
-  private RobotContainer m_robotContainer;
   public static SpeedControllerSetUp speedcontrollersetup;
-  AHRS ahrs;
+  public static AHRS m_gyro;
 
-  //Commands to be used later
+  // Commands to be used later
   private Command m_autonomousCommand;
   public static boolean autoVal;
   public static String gameData;
-  //private Command autonomousCommand;
+  // private Command autonomousCommand;
   // private SendableChooser<Character> autoSide;
   // private SendableChooser<Character> autoGroup;
-//  private SendableChooser<Command> chooser = new SendableChooser<>();
+  // private SendableChooser<Command> chooser = new SendableChooser<>();
 
-
- 
-  //Initalizing
+  // Initalizing
   public void robotInit() {
 
-      //Sets up the camera
-     // CameraServer.getInstance().startAutomaticCapture();
-      //For limelight, use 10.31.0.11:5801
+    // Sets up the camera
+    // CameraServer.getInstance().startAutomaticCapture();
+    // For limelight, use 10.31.0.11:5801
 
-      //Gets what type of game is being played, not that important
-      gameData = DriverStation.getInstance().getGameSpecificMessage();
+    // Gets what type of game is being played, not that important
+    gameData = DriverStation.getInstance().getGameSpecificMessage();
 
-      try {
-        /***********************************************************************
-         * navX-MXP: - Communication via RoboRIO MXP (SPI, I2C) and USB. - See
-         * http://navx-mxp.kauailabs.com/guidance/selecting-an-interface.
-         * 
-         * navX-Micro: - Communication via I2C (RoboRIO MXP or Onboard) and USB. - See
-         * http://navx-micro.kauailabs.com/guidance/selecting-an-interface.
-         * 
-         * VMX-pi: - Communication via USB. - See
-         * https://vmx-pi.kauailabs.com/installation/roborio-installation/
-         * 
-         * Multiple navX-model devices on a single robot are supported.
-         ************************************************************************/
-        ahrs = new AHRS(SPI.Port.kMXP);
-      } catch (RuntimeException ex) {
-        DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-      }
+    try {
+      /***********************************************************************
+       * navX-MXP: - Communication via RoboRIO MXP (SPI, I2C) and USB. - See
+       * http://navx-mxp.kauailabs.com/guidance/selecting-an-interface.
+       * 
+       * navX-Micro: - Communication via I2C (RoboRIO MXP or Onboard) and USB. - See
+       * http://navx-micro.kauailabs.com/guidance/selecting-an-interface.
+       * 
+       * VMX-pi: - Communication via USB. - See
+       * https://vmx-pi.kauailabs.com/installation/roborio-installation/
+       * 
+       * Multiple navX-model devices on a single robot are supported.
+       ************************************************************************/
+      m_gyro = new AHRS(SPI.Port.kMXP);
+    } catch (RuntimeException ex) {
+      DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+    }
 
-     
+    // chooser.setDefaultOption("Auto Master", new
+    // AutonomousMaster(autoGroup.getSelected(), gameData, autoSide.getSelected()));
 
-     // chooser.setDefaultOption("Auto Master", new AutonomousMaster(autoGroup.getSelected(), gameData, autoSide.getSelected()));
+    // autonomousCommand = new AutonomousMaster(autoGroup.getSelected(), gameData,
+    // autoSide.getSelected());
 
-   //   autonomousCommand = new AutonomousMaster(autoGroup.getSelected(), gameData, autoSide.getSelected());
+    // Autonomous Master Class
 
-      //Autonomous Master Class
+    // Options in the Smartdashboard
+    // autoGroup = new SendableChooser<>();
+    // autoGroup.addDefault("Group 1", '1');
+    // autoGroup.addObject("Group 2", '2');
+    // autoGroup.addObject("Group 3", '3');
+    // autoGroup.addObject("Group 4", '4');
+    // autoGroup.addObject("Test 5", '5');
+    // SmartDashboard.putData("Autonomous", autoGroup);
 
+    // autoSide = new SendableChooser<>();
+    // autoSide.addObject("Left Side", 'L');
+    // autoSide.addDefault("Right Side", 'R');
+    // SmartDashboard.putData("Side", autoSide);
 
-      //Options in the Smartdashboard
-      // autoGroup = new SendableChooser<>();
-      // autoGroup.addDefault("Group 1", '1');
-      // autoGroup.addObject("Group 2", '2');
-      // autoGroup.addObject("Group 3", '3');
-      // autoGroup.addObject("Group 4", '4');
-      // autoGroup.addObject("Test 5", '5');
-      // SmartDashboard.putData("Autonomous", autoGroup);
-
-      // autoSide = new SendableChooser<>();
-      // autoSide.addObject("Left Side", 'L');
-      // autoSide.addDefault("Right Side", 'R');
-      // SmartDashboard.putData("Side", autoSide);
-
-
-     // SmartDashboard.putData(drive);
-     m_robotContainer = new RobotContainer();
+    new RobotContainer();
       new SpeedControllerSetUp().configure();
 
 
@@ -132,7 +121,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = RobotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
