@@ -50,7 +50,7 @@ public final class Constants {
 
 
    // TURN PID FOR TurnToAngle
-   public static final double kTurnP = 0.8;
+   public static final double kTurnP = 0.4;
    public static final double kTurnI = 0;
    public static final double kTurnD = 0;
 

@@ -63,7 +63,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    turnToAngle.whenPressed(new TurnToAngle(45, m_robotDrive).withTimeout(5));
+  //  turnToAngle.whenPressed(new TurnToAngle(90, m_robotDrive).withTimeout(5));
+    turnToAngle.whenPressed(new TurnToAngle2(90, m_robotDrive));
     reset.whenPressed(new Reset());
     halfSpeed.whenPressed(() -> m_robotDrive.setMaxOutput(0.5));
     halfSpeed.whenReleased(() -> m_robotDrive.setMaxOutput(1));
@@ -78,7 +79,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public static Command getAutonomousCommand() {
-    // no auto
+    // no auto yet
     return new InstantCommand();
   }
 

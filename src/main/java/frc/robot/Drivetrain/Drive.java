@@ -25,19 +25,16 @@ public class Drive extends SubsystemBase {
     private double scaleRotate;
 
     private final double moveAccelerationLimit = 0.05;
-    private final double rotateAccelerationLimit = 0.08; // Velocity - Tune for different drivetrain, if it's too low,
-                                                         // sluggish
+    private final double rotateAccelerationLimit = 0.08; // Velocity - Tune for different drivetrain, if it's too
+                                                                // low,
+    // sluggish
 
     static final double Kp = 1.00;
     static final double Ki = 0.00;
     static final double Kd = 0.00;
     double rotateToAngleRate;
     // AHRS m_gyro = new AHRS(SPI.Port.kMXP);
-  
-    
-    
-    
-    
+
     private final Encoder m_leftEncoder, m_rightEncoder;
 
     static final double kToleranceDegrees = 2.0f;
@@ -48,12 +45,11 @@ public class Drive extends SubsystemBase {
         zeroHeading();
         Robot.m_gyro.zeroYaw();
 
-
-    // Since encoders return pulses, set the proper distance using wheel diameter.
-    m_leftEncoder = new Encoder(leftEncoderPort, leftEncoderPort + 1);
-    m_leftEncoder.setDistancePerPulse(2048);
-    m_rightEncoder = new Encoder(rightEncoderPort, rightEncoderPort + 1);
-    m_rightEncoder.setDistancePerPulse(2048);
+        // Since encoders return pulses, set the proper distance using wheel diameter.
+        m_leftEncoder = new Encoder(leftEncoderPort, leftEncoderPort + 1);
+        m_leftEncoder.setDistancePerPulse(2048);
+        m_rightEncoder = new Encoder(rightEncoderPort, rightEncoderPort + 1);
+        m_rightEncoder.setDistancePerPulse(2048);
 
     }
 
@@ -61,12 +57,14 @@ public class Drive extends SubsystemBase {
     // TODO: Check to see if the arcadeDrive functions are actually being used
     public void arcadeDrive(double moveSpeed, double rotateSpeed) {
 
+        System.out.println("Stage 1");
+
         // Limits for speed, using quadratics and max/min
         moveSpeed = deadband(moveSpeed);
         rotateSpeed = deadband(rotateSpeed);
 
         scaleSpeed = moveSpeed < 0 ? -0.8 : 0.8;
-        scaleRotate = rotateSpeed < 0 ? -0.3 : 0.3;
+        scaleRotate = rotateSpeed < 0 ? -0.6 : 0.6;
 
         moveSpeed *= scaleSpeed * moveSpeed;
         rotateSpeed *= scaleRotate * rotateSpeed;
@@ -75,31 +73,38 @@ public class Drive extends SubsystemBase {
         // value
         // Checks to see if it's greater than the limit for acceleration
 
+        System.out.println("Stage 2");
         // M O V E
         double bSpeed = moveSpeed - limitSpeed;
         if (bSpeed > moveAccelerationLimit) {
             limitSpeed += moveAccelerationLimit;
+            System.out.println("Stage 2A");
         } else if (bSpeed < -moveAccelerationLimit) {
             limitSpeed -= moveAccelerationLimit;
+            System.out.println("Stage 2B");
         } else if (bSpeed <= moveAccelerationLimit) {
             limitSpeed = moveSpeed;
+            System.out.println("Stage 2C");
         }
 
+        System.out.println("Stage 3");
         // R O T A T E
         double bRotate = rotateSpeed - limitRotate;
         if (bRotate > rotateAccelerationLimit) {
             limitRotate += rotateAccelerationLimit;
+            System.out.println("Stage 3A");
         } else if (bRotate < -rotateAccelerationLimit) {
             limitRotate -= rotateAccelerationLimit;
+            System.out.println("Stage 3B");
         } else if (bRotate <= rotateAccelerationLimit) {
+            System.out.println("Stage 3C");
             limitRotate = rotateSpeed;
         }
 
-
-        frontLeft.set(ControlMode.PercentOutput, -limitRotate, DemandType.ArbitraryFeedForward,
-                limitSpeed);
-        frontRight.set(ControlMode.PercentOutput, +limitRotate, DemandType.ArbitraryFeedForward,
-                limitSpeed);
+        
+        System.out.println("Stage 4");
+        frontLeft.set(ControlMode.PercentOutput, -limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
+        frontRight.set(ControlMode.PercentOutput, +limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
 
     }
 
@@ -118,8 +123,8 @@ public class Drive extends SubsystemBase {
 
         // Tells the program to run the driveTank
         // differentialDrive.tankDrive(leftSpeed, rightSpeed);
-         frontRight.set(ControlMode.PercentOutput,rightSpeed);
-         frontLeft.set(ControlMode.PercentOutput,leftSpeed);
+        frontRight.set(ControlMode.PercentOutput, rightSpeed);
+        frontLeft.set(ControlMode.PercentOutput, leftSpeed);
     }
 
     /**
@@ -133,16 +138,16 @@ public class Drive extends SubsystemBase {
 
     public double getLeftDistance() {
         return m_leftEncoder.getDistance();
-      }
-    
-      public double getRightDistance() {
+    }
+
+    public double getRightDistance() {
         return m_rightEncoder.getDistance();
-      }
-    
-      public void resetEncoders() {
+    }
+
+    public void resetEncoders() {
         m_leftEncoder.reset();
         m_rightEncoder.reset();
-      }
+    }
 
     /**
      * Sets the max output of the drive. Useful for scaling the drive to drive more
@@ -151,7 +156,7 @@ public class Drive extends SubsystemBase {
      * @param maxOutput the maximum output to which the drive will be constrained
      */
     public void setMaxOutput(final double maxOutput) {
-         setMaxOutput(maxOutput);
+        setMaxOutput(maxOutput);
     }
 
     /**
@@ -168,7 +173,6 @@ public class Drive extends SubsystemBase {
      */
     public double getHeading() {
         return Math.IEEEremainder(Robot.m_gyro.getAngle(), 360) * (kGyroReversed ? -1.0 : 1.0);
-        //return (Robot.m_gyro.getAngle());
     }
 
     /**
@@ -180,12 +184,12 @@ public class Drive extends SubsystemBase {
         return Robot.m_gyro.getRate() * (kGyroReversed ? -1.0 : 1.0);
     }
 
-    /* 
+    /*
      * 
      * Prevents the robot from moving with a small amount of input
      * 
-      */
-    private double deadband(final double input) {
+     */
+    private static double deadband(final double input) {
         if (Math.abs(input) < 0.2) {
             return 0;
         } else {
@@ -200,7 +204,7 @@ public class Drive extends SubsystemBase {
 
    // System.out.println(m_gyro.isRotating());
    // System.out.println(Robot.m_gyro.getAngle());
-   // System.out.println(getHeading());
+    //System.out.println(getHeading());
   }
 
 }
