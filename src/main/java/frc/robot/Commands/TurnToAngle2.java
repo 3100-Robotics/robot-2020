@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Robot;
 import frc.robot.Drivetrain.Drive;
 import frc.robot.Mapping.Constants;
 
@@ -14,35 +15,48 @@ import frc.robot.Mapping.Constants;
  */
 public class TurnToAngle2 extends CommandBase {
     private final Drive m_drive;
-    private final double target;
+    private final double target, speed;
    
   
     /**
      * Creates a new TurnToAngle2.
-     *
-     * @param subsystem The drive subsystem this command wil run on.
-     * @param forward The control input for driving forwards/backwards
-     * @param rotation The control input for turning
      */
-    public TurnToAngle2(double targetDegrees, Drive subsystem) {
+    public TurnToAngle2(double targetDegrees, double moveSpeed, Drive subsystem) {
       m_drive = subsystem;
       target = targetDegrees;
+      speed = moveSpeed;
       
       addRequirements(m_drive);
     }
   
+   
+    public void initialize() {
+      m_drive.zeroHeading();
+    }
+
     @Override
     public void execute() {
       
-        if(m_drive.getHeading() < target){
+            m_drive.arcadeDrive(0, -speed);
 
-            m_drive.arcadeDrive(0, 0.2);
-            System.out.println("Turning");
-        }else{
+    }
 
-           
+    public boolean isFinished() {
+     
+      boolean isFinished = false;
 
-        }
+      if(m_drive.getHeading() <= target) {
+          isFinished = false;
+      } else {
+          isFinished = true;
+      }
+
+      return isFinished;
+  }
+
+    public void end(boolean interrupted){
+
+      m_drive.arcadeDrive(0, 0);
 
     }
   }

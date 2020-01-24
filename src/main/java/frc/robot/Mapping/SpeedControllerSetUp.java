@@ -2,6 +2,7 @@
 package frc.robot.Mapping;
 
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import static frc.robot.Mapping.Constants.*;
 
@@ -33,6 +34,9 @@ public class SpeedControllerSetUp {
         // RobotMap.rightFrontDriveMotor.config_kD(0, 0.0001 );
         // RobotMap.rightFrontDriveMotor.config_kI(0, 0); //DON'T CHANGE
         // RobotMap.rightFrontDriveMotor.config_kF(0, 1023.0/22425.0);
+
+        frontLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        frontRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
 
     }

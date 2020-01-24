@@ -46,9 +46,10 @@ public class Drive extends SubsystemBase {
         Robot.m_gyro.zeroYaw();
 
         // Since encoders return pulses, set the proper distance using wheel diameter.
-        m_leftEncoder = new Encoder(leftEncoderPort, leftEncoderPort + 1);
+        m_leftEncoder = new Encoder(3, 1);
+       // m_leftEncoder = new leftFront.Encoder();
         m_leftEncoder.setDistancePerPulse(2048);
-        m_rightEncoder = new Encoder(rightEncoderPort, rightEncoderPort + 1);
+        m_rightEncoder = new Encoder(4, 2);
         m_rightEncoder.setDistancePerPulse(2048);
 
     }
@@ -57,7 +58,7 @@ public class Drive extends SubsystemBase {
     // TODO: Check to see if the arcadeDrive functions are actually being used
     public void arcadeDrive(double moveSpeed, double rotateSpeed) {
 
-        System.out.println("Stage 1");
+
 
         // Limits for speed, using quadratics and max/min
         moveSpeed = deadband(moveSpeed);
@@ -73,38 +74,39 @@ public class Drive extends SubsystemBase {
         // value
         // Checks to see if it's greater than the limit for acceleration
 
-        System.out.println("Stage 2");
+       
         // M O V E
         double bSpeed = moveSpeed - limitSpeed;
         if (bSpeed > moveAccelerationLimit) {
             limitSpeed += moveAccelerationLimit;
-            System.out.println("Stage 2A");
+            
         } else if (bSpeed < -moveAccelerationLimit) {
             limitSpeed -= moveAccelerationLimit;
-            System.out.println("Stage 2B");
+            
         } else if (bSpeed <= moveAccelerationLimit) {
             limitSpeed = moveSpeed;
-            System.out.println("Stage 2C");
+           
         }
 
-        System.out.println("Stage 3");
+     
         // R O T A T E
         double bRotate = rotateSpeed - limitRotate;
         if (bRotate > rotateAccelerationLimit) {
             limitRotate += rotateAccelerationLimit;
-            System.out.println("Stage 3A");
+            
         } else if (bRotate < -rotateAccelerationLimit) {
             limitRotate -= rotateAccelerationLimit;
-            System.out.println("Stage 3B");
+           
         } else if (bRotate <= rotateAccelerationLimit) {
-            System.out.println("Stage 3C");
+           
             limitRotate = rotateSpeed;
         }
 
         
-        System.out.println("Stage 4");
+     
         frontLeft.set(ControlMode.PercentOutput, -limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
         frontRight.set(ControlMode.PercentOutput, +limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
+        
 
     }
 
@@ -204,7 +206,11 @@ public class Drive extends SubsystemBase {
 
    // System.out.println(m_gyro.isRotating());
    // System.out.println(Robot.m_gyro.getAngle());
-    //System.out.println(getHeading());
+   // System.out.println(getHeading());
+//   System.out.println("Left");
+//     System.out.println(getLeftDistance());
+//   System.out.println("Right");
+//     System.out.println(getRightDistance());
   }
 
 }
