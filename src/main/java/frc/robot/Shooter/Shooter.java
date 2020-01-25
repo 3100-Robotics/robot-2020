@@ -10,8 +10,7 @@ public class Shooter extends SubsystemBase {
 
     public void run() {
 
-
-        //TODO: This is what I can use to test PID Tuning
+        // TODO: This is what I can use to test PID Tuning
         // RobotMap.driveControls.getRightTrigger() * 22000
 
         // RobotMap.driveControls.getRightTrigger();

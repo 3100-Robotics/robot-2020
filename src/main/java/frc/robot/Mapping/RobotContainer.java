@@ -2,6 +2,7 @@
 package frc.robot.Mapping;
 
 import edu.wpi.first.wpilibj.GenericHID;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -9,16 +10,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Drivetrain.Drive;
 import frc.robot.Shooter.Shooter;
 import frc.robot.Drivetrain.DefaultDrive;
-//import frc.robot.Shooter.Shooter;
 import frc.robot.Robot;
 import frc.robot.Autonomous.AutoRoute;
+import frc.robot.Autonomous.DriveForward;
+import frc.robot.Autonomous.TurnToAngle2;
 import frc.robot.Commands.*;
 
 public class RobotContainer {
-  
+
   private final static Drive m_robotDrive = new Drive();
   public final static Shooter m_shooter = new Shooter();
 
@@ -30,11 +33,14 @@ public class RobotContainer {
   public final static XboxController m_techController = new XboxController(Constants.TechControllerPort);
 
   private final JoystickButton turnToAngle = new JoystickButton(m_driveController, Constants.xButtonChannel);
+  private final JoystickButton driveForward = new JoystickButton(m_driveController, Constants.yButtonChannel);
   private final JoystickButton reset = new JoystickButton(m_driveController, Constants.aButtonChannel);
   private final JoystickButton halfSpeed = new JoystickButton(m_driveController, Constants.rightBumperChannel);
-  private final JoystickButton test = new JoystickButton(m_driveController, Constants.yButtonChannel);
+  private final POVButton test = new POVButton(m_driveController, Constants.POVU);
 
   private final Command AutoRoute = new AutoRoute(m_robotDrive);
+   // A chooser for autonomous commands
+ SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, RobotContainer devices, and
@@ -52,7 +58,7 @@ public class RobotContainer {
         new DefaultDrive(m_robotDrive, () -> -m_driveController.getY(GenericHID.Hand.kLeft),
             () -> -m_driveController.getX(GenericHID.Hand.kRight)));
 
-      m_chooser.addOption("Auto", AutoRoute);
+    m_chooser.addOption("Auto", AutoRoute);
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -68,30 +74,23 @@ public class RobotContainer {
 
     // turnToAngle.whenPressed(new TurnToAngle(90, m_robotDrive).withTimeout(5));
     turnToAngle.whenPressed(new TurnToAngle2(90, 0.8, m_robotDrive));
-   
+    driveForward.whenPressed(new DriveForward(2048, 0.3, m_robotDrive));
     reset.whenPressed(new Reset());
     halfSpeed.whenPressed(() -> m_robotDrive.setMaxOutput(0.5));
     halfSpeed.whenReleased(() -> m_robotDrive.setMaxOutput(1));
-    test.toggleWhenPressed(new Test());
+    test.whenPressed(new Test());
 
   }
 
-  // A chooser for autonomous commands
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
-
-
-  
+ 
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  public static Command getAutonomousCommand() {
-    
-    //m_chooser.getSelected(); for auto chooser
-    return new AutoRoute(m_robotDrive);
+  public Command getAutonomousCommand() {
+    return m_chooser.getSelected();
   }
-
 
 }

@@ -13,52 +13,31 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Mapping.Constants;
+
 import static frc.robot.Mapping.Constants.*;
 
 public class Drive extends SubsystemBase {
 
-    PIDController turnController;
     private double limitSpeed = 0;
     private double limitRotate = 0;
-
     private double scaleSpeed;
     private double scaleRotate;
-
     private final double moveAccelerationLimit = 0.05;
     private final double rotateAccelerationLimit = 0.08; // Velocity - Tune for different drivetrain, if it's too
-                                                                // low,
-    // sluggish
-
-    static final double Kp = 1.00;
-    static final double Ki = 0.00;
-    static final double Kd = 0.00;
-    double rotateToAngleRate;
-    // AHRS m_gyro = new AHRS(SPI.Port.kMXP);
-
-    private final Encoder m_leftEncoder, m_rightEncoder;
-
-    static final double kToleranceDegrees = 2.0f;
-    static final double kTargetAngleDegrees = 90.0f;
+                                                         // low/sluggish
 
     public Drive() {
 
         zeroHeading();
         Robot.m_gyro.zeroYaw();
-
-        // Since encoders return pulses, set the proper distance using wheel diameter.
-        m_leftEncoder = new Encoder(3, 1);
-       // m_leftEncoder = new leftFront.Encoder();
-        m_leftEncoder.setDistancePerPulse(2048);
-        m_rightEncoder = new Encoder(4, 2);
-        m_rightEncoder.setDistancePerPulse(2048);
+        resetEncoders();
 
     }
 
     // Arcade Drive, one Joystick controls forwards/backwards, the other controls
-    // TODO: Check to see if the arcadeDrive functions are actually being used
+
     public void arcadeDrive(double moveSpeed, double rotateSpeed) {
-
-
 
         // Limits for speed, using quadratics and max/min
         moveSpeed = deadband(moveSpeed);
@@ -74,39 +53,34 @@ public class Drive extends SubsystemBase {
         // value
         // Checks to see if it's greater than the limit for acceleration
 
-       
         // M O V E
         double bSpeed = moveSpeed - limitSpeed;
         if (bSpeed > moveAccelerationLimit) {
             limitSpeed += moveAccelerationLimit;
-            
+
         } else if (bSpeed < -moveAccelerationLimit) {
             limitSpeed -= moveAccelerationLimit;
-            
+
         } else if (bSpeed <= moveAccelerationLimit) {
             limitSpeed = moveSpeed;
-           
+
         }
 
-     
         // R O T A T E
         double bRotate = rotateSpeed - limitRotate;
         if (bRotate > rotateAccelerationLimit) {
             limitRotate += rotateAccelerationLimit;
-            
+
         } else if (bRotate < -rotateAccelerationLimit) {
             limitRotate -= rotateAccelerationLimit;
-           
+
         } else if (bRotate <= rotateAccelerationLimit) {
-           
+
             limitRotate = rotateSpeed;
         }
 
-        
-     
         frontLeft.set(ControlMode.PercentOutput, -limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
         frontRight.set(ControlMode.PercentOutput, +limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
-        
 
     }
 
@@ -135,20 +109,20 @@ public class Drive extends SubsystemBase {
      * @return the average of the two encoder readings
      */
     public double getAverageEncoderDistance() {
-        return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+        return (frontLeft.getSelectedSensorPosition() + frontRight.getSelectedSensorPosition()) / 2.0;
     }
 
     public double getLeftDistance() {
-        return m_leftEncoder.getDistance();
+        return ((frontLeft.getSelectedSensorPosition() * 2 * Math.PI * 6) / 512);// * 0.0001;
     }
 
     public double getRightDistance() {
-        return m_rightEncoder.getDistance();
+        return frontRight.getSelectedSensorPosition();// * 0.001;
     }
 
     public void resetEncoders() {
-        m_leftEncoder.reset();
-        m_rightEncoder.reset();
+        frontLeft.setSelectedSensorPosition(0);
+        frontRight.setSelectedSensorPosition(0);
     }
 
     /**
@@ -198,19 +172,18 @@ public class Drive extends SubsystemBase {
             return input;
         }
     }
-    
- 
- @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
 
-   // System.out.println(m_gyro.isRotating());
-   // System.out.println(Robot.m_gyro.getAngle());
-   // System.out.println(getHeading());
-//   System.out.println("Left");
-//     System.out.println(getLeftDistance());
-//   System.out.println("Right");
-//     System.out.println(getRightDistance());
-  }
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+
+        // System.out.println(m_gyro.isRotating());
+        // System.out.println(Robot.m_gyro.getAngle());
+        // System.out.println(getHeading());
+        // System.out.println("Left");
+        System.out.println(getLeftDistance());
+        // System.out.println("Right");
+        // System.out.println(getRightDistance());
+    }
 
 }

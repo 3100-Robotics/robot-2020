@@ -12,11 +12,14 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Mapping.RobotContainer;
 import frc.robot.Mapping.SpeedControllerSetUp;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,16 +30,15 @@ import frc.robot.Mapping.SpeedControllerSetUp;
  */
 public class Robot extends TimedRobot {
 
-
-  //If mode = 1, Arcade
-  //If mode = 2, Tank
+  // If mode = 1, Arcade
+  // If mode = 2, Tank
   public static int mode = 1;
 
-
-  //Defining Subsystems
+  // Defining Subsystems
 
   public static SpeedControllerSetUp speedcontrollersetup;
   public static AHRS m_gyro;
+  private RobotContainer m_robotContainer;
 
   // Commands to be used later
   private Command m_autonomousCommand;
@@ -50,9 +52,24 @@ public class Robot extends TimedRobot {
   // Initalizing
   public void robotInit() {
 
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTableEntry tx = table.getEntry("tx");
+    NetworkTableEntry ty = table.getEntry("ty");
+    NetworkTableEntry ta = table.getEntry("ta");
+
+    // read values periodically
+    double x = tx.getDouble(0.0);
+    double y = ty.getDouble(0.0);
+    double area = ta.getDouble(0.0);
+
+    // post to smart dashboard periodically
+    SmartDashboard.putNumber("LimelightX", x);
+    SmartDashboard.putNumber("LimelightY", y);
+    SmartDashboard.putNumber("LimelightArea", area);
+
     // Sets up the camera
     // CameraServer.getInstance().startAutomaticCapture();
-    // For limelight, use 10.31.0.11:5801
+    // For limelight, use 10.31.0.1:5801
 
     // Gets what type of game is being played, not that important
     gameData = DriverStation.getInstance().getGameSpecificMessage();
@@ -75,33 +92,11 @@ public class Robot extends TimedRobot {
       DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
     }
 
-    // chooser.setDefaultOption("Auto Master", new
-    // AutonomousMaster(autoGroup.getSelected(), gameData, autoSide.getSelected()));
-
-    // autonomousCommand = new AutonomousMaster(autoGroup.getSelected(), gameData,
-    // autoSide.getSelected());
-
-    // Autonomous Master Class
-
-    // Options in the Smartdashboard
-    // autoGroup = new SendableChooser<>();
-    // autoGroup.addDefault("Group 1", '1');
-    // autoGroup.addObject("Group 2", '2');
-    // autoGroup.addObject("Group 3", '3');
-    // autoGroup.addObject("Group 4", '4');
-    // autoGroup.addObject("Test 5", '5');
-    // SmartDashboard.putData("Autonomous", autoGroup);
-
-    // autoSide = new SendableChooser<>();
-    // autoSide.addObject("Left Side", 'L');
-    // autoSide.addDefault("Right Side", 'R');
-    // SmartDashboard.putData("Side", autoSide);
-
-    new RobotContainer();
-      new SpeedControllerSetUp().configure();
-
+    m_robotContainer = new RobotContainer();
+    new SpeedControllerSetUp().configure();
 
   }
+
   @Override
   public void robotPeriodic() {
     // Runs the Scheduler
@@ -117,11 +112,12 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = RobotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

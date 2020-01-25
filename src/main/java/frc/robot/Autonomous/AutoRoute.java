@@ -5,20 +5,12 @@ import frc.robot.Drivetrain.Drive;
 
 public class AutoRoute extends SequentialCommandGroup {
 
-    public AutoRoute(Drive drive){
+    public AutoRoute(Drive drive) {
 
         super(new DriveForward(1, 0.5, drive)
-            
-
-
-
-
-
 
         );
-        
-    }
 
-	
+    }
 
 }

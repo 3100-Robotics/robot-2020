@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Drivetrain.Drive;
 
 /**
- * Code should inline a command this simple with {@link
- * edu.wpi.first.wpilibj2.command.RunCommand}.
+ * Code should inline a command this simple with
+ * {@link edu.wpi.first.wpilibj2.command.RunCommand}.
  */
 public class DefaultDrive extends CommandBase {
   private final Drive m_drive;
@@ -19,8 +19,8 @@ public class DefaultDrive extends CommandBase {
    * Creates a new DefaultDrive.
    *
    * @param subsystem The drive subsystem this command wil run on.
-   * @param forward The control input for driving forwards/backwards
-   * @param rotation The control input for turning
+   * @param forward   The control input for driving forwards/backwards
+   * @param rotation  The control input for turning
    */
   public DefaultDrive(Drive subsystem, DoubleSupplier forward, DoubleSupplier rotation) {
     m_drive = subsystem;
