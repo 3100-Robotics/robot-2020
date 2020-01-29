@@ -38,7 +38,7 @@ public class TurnToAngle2 extends CommandBase {
   @Override
   public void execute() {
 
-    m_drive.arcadeDrive(0, -speed);
+    m_drive.arcadeDrive(0, speed);
 
   }
 

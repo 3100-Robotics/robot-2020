@@ -9,6 +9,9 @@ package frc.robot.Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.Faults;
+import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
+
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,6 +29,11 @@ public class Drive extends SubsystemBase {
     private final double moveAccelerationLimit = 0.05;
     private final double rotateAccelerationLimit = 0.08; // Velocity - Tune for different drivetrain, if it's too
                                                          // low/sluggish
+
+    private final double wheelDiamter = 6;
+    private final double wheelCircum = (Math.PI * wheelDiamter);
+    // Encoder Scale Factor (Inches)/(Pulse)
+    private final double kScaleFactor = (1.0 / 4096.0) * wheelCircum / 6.5;
 
     public Drive() {
 
@@ -109,18 +117,18 @@ public class Drive extends SubsystemBase {
      * @return the average of the two encoder readings
      */
     public double getAverageEncoderDistance() {
-        return (frontLeft.getSelectedSensorPosition() + frontRight.getSelectedSensorPosition()) / 2.0;
+        return (getLeftDistance() + getRightDistance()) / 2.0;
     }
 
     public double getLeftDistance() {
-        return ((frontLeft.getSelectedSensorPosition() * 2 * Math.PI * 6) / 512);// * 0.0001;
+        return (frontLeft.getSelectedSensorPosition(0) * kScaleFactor);
     }
 
     public double getRightDistance() {
-        return frontRight.getSelectedSensorPosition();// * 0.001;
+        return (frontRight.getSelectedSensorPosition(0) * kScaleFactor);// * 0.001;
     }
 
-    public void resetEncoders() {
+    public static void resetEncoders() {
         frontLeft.setSelectedSensorPosition(0);
         frontRight.setSelectedSensorPosition(0);
     }
@@ -181,9 +189,14 @@ public class Drive extends SubsystemBase {
         // System.out.println(Robot.m_gyro.getAngle());
         // System.out.println(getHeading());
         // System.out.println("Left");
-        System.out.println(getLeftDistance());
+        System.out.println(getHeading());
         // System.out.println("Right");
         // System.out.println(getRightDistance());
+
+    //   System.out.println("Sensor Vel:" + frontLeft.getSelectedSensorVelocity());
+    //   System.out.println("Sensor Pos:" + frontLeft.getSelectedSensorPosition());
+    //   System.out.println("Out %" + frontLeft.getMotorOutputPercent());
+    //   System.out.println("Out Of Phase:" + faults.SensorOutOfPhase);
     }
 
 }

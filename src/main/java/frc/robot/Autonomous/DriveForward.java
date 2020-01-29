@@ -7,6 +7,8 @@ import frc.robot.Drivetrain.Drive;
 public class DriveForward extends CommandBase {
     public final Drive drive;
     private final double goal, speed;
+    
+   
 
     public DriveForward(final double goalDistance, final double driveSpeed, final Drive drive) {
         this.drive = drive;
@@ -17,18 +19,16 @@ public class DriveForward extends CommandBase {
     }
 
     public void initialize() {
-        drive.resetEncoders();
-
+        Drive.resetEncoders();
         drive.arcadeDrive(speed, 0);
-
     }
 
     public void execute() {
-        double error = drive.getLeftDistance() - drive.getRightDistance();
+       // double error = drive.getLeftDistance() - drive.getRightDistance();
 
         // System.out.println("Error");
         // System.out.println(error);
-        System.out.println(drive.getAverageEncoderDistance());
+    //    System.out.println(drive.getAverageEncoderDistance());
 
         drive.arcadeDrive(speed, 0);
 

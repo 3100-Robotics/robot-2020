@@ -13,17 +13,20 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Drivetrain.Drive;
 import frc.robot.Shooter.Shooter;
+import frc.robot.Subsystems.Collector;
 import frc.robot.Drivetrain.DefaultDrive;
 import frc.robot.Robot;
 import frc.robot.Autonomous.AutoRoute;
 import frc.robot.Autonomous.DriveForward;
 import frc.robot.Autonomous.TurnToAngle2;
 import frc.robot.Commands.*;
+import static frc.robot.Mapping.RobotCommands.*;
 
 public class RobotContainer {
 
-  private final static Drive m_robotDrive = new Drive();
-  public final static Shooter m_shooter = new Shooter();
+  private final RobotCommands robotCommands = new RobotCommands();
+
+  
 
   // public static AHRS ahrs = new AHRS(SPI.Port.kMXP);
 
@@ -36,6 +39,15 @@ public class RobotContainer {
   private final JoystickButton driveForward = new JoystickButton(m_driveController, Constants.yButtonChannel);
   private final JoystickButton reset = new JoystickButton(m_driveController, Constants.aButtonChannel);
   private final JoystickButton halfSpeed = new JoystickButton(m_driveController, Constants.rightBumperChannel);
+  private final JoystickButton collectorOn = new JoystickButton(m_techController, Constants.xButtonChannel);
+  private final JoystickButton collectorReverse = new JoystickButton(m_techController, Constants.leftBumperChannel);
+  private final JoystickButton groundEject = new JoystickButton(m_techController, Constants.leftTriggerChannel);
+  private final JoystickButton humanCollect = new JoystickButton(m_techController, Constants.rightBumperChannel);
+  private final JoystickButton groundCollect = new JoystickButton(m_techController, Constants.rightTriggerChannel);
+  private final JoystickButton collectorUpDown = new JoystickButton(m_techController, Constants.aButtonChannel);
+  private final POVButton shooterFar = new POVButton(m_techController, Constants.POVU);
+  private final POVButton shooterNear = new POVButton(m_techController, Constants.POVD);
+
   private final POVButton test = new POVButton(m_driveController, Constants.POVU);
 
   private final Command AutoRoute = new AutoRoute(m_robotDrive);
@@ -56,7 +68,7 @@ public class RobotContainer {
         // A split-stick arcade command, with forward/backward controlled by the left
         // hand, and turning controlled by the right.
         new DefaultDrive(m_robotDrive, () -> -m_driveController.getY(GenericHID.Hand.kLeft),
-            () -> -m_driveController.getX(GenericHID.Hand.kRight)));
+            () -> m_driveController.getX(GenericHID.Hand.kRight)));
 
     m_chooser.addOption("Auto", AutoRoute);
 
@@ -73,12 +85,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // turnToAngle.whenPressed(new TurnToAngle(90, m_robotDrive).withTimeout(5));
-    turnToAngle.whenPressed(new TurnToAngle2(90, 0.8, m_robotDrive));
-    driveForward.whenPressed(new DriveForward(2048, 0.3, m_robotDrive));
+    turnToAngle.whenPressed(new TurnToAngle2(90, 0.4, m_robotDrive));
+    driveForward.whenPressed(new DriveForward(60, 0.4, m_robotDrive));
     reset.whenPressed(new Reset());
-    halfSpeed.whenPressed(() -> m_robotDrive.setMaxOutput(0.5));
-    halfSpeed.whenReleased(() -> m_robotDrive.setMaxOutput(1));
     test.whenPressed(new Test());
+    halfSpeed.toggleWhenPressed(robotCommands.halfSpeed);
+    collectorOn.whileHeld(robotCommands.collectorOn);
 
   }
 
