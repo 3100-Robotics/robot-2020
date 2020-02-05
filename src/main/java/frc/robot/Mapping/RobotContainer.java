@@ -35,18 +35,29 @@ public class RobotContainer {
   // TECH CONTROLLER
   public final static XboxController m_techController = new XboxController(Constants.TechControllerPort);
 
+  // === Drive === //
+
   private final JoystickButton turnToAngle = new JoystickButton(m_driveController, Constants.xButtonChannel);
   private final JoystickButton driveForward = new JoystickButton(m_driveController, Constants.yButtonChannel);
+  private final JoystickButton halfSpeed = new JoystickButton(m_driveController, Constants.rightTriggerChannel);
+  
   private final JoystickButton reset = new JoystickButton(m_driveController, Constants.aButtonChannel);
-  private final JoystickButton halfSpeed = new JoystickButton(m_driveController, Constants.rightBumperChannel);
-  private final JoystickButton collectorOn = new JoystickButton(m_techController, Constants.xButtonChannel);
-  private final JoystickButton collectorReverse = new JoystickButton(m_techController, Constants.leftBumperChannel);
+
+  // === Collector === //
   private final JoystickButton groundEject = new JoystickButton(m_techController, Constants.leftTriggerChannel);
-  private final JoystickButton humanCollect = new JoystickButton(m_techController, Constants.rightBumperChannel);
+  private final JoystickButton collectorReverse = new JoystickButton(m_techController, Constants.leftBumperChannel);
   private final JoystickButton groundCollect = new JoystickButton(m_techController, Constants.rightTriggerChannel);
+  private final JoystickButton humanCollect = new JoystickButton(m_techController, Constants.rightBumperChannel);
   private final JoystickButton collectorUpDown = new JoystickButton(m_techController, Constants.aButtonChannel);
+
+  // === Shooter === //
+  private final JoystickButton shoot = new JoystickButton(m_driveController, Constants.leftBumperChannel);
+  private final JoystickButton shooterOn = new JoystickButton(m_techController, Constants.backButtonChannel);
   private final POVButton shooterFar = new POVButton(m_techController, Constants.POVU);
   private final POVButton shooterNear = new POVButton(m_techController, Constants.POVD);
+
+  // === Climber === //
+  private final JoystickButton climberControl = new JoystickButton(m_techController, Constants.leftYAxisChannel);
 
   private final POVButton test = new POVButton(m_driveController, Constants.POVU);
 
@@ -76,12 +87,6 @@ public class RobotContainer {
     Shuffleboard.getTab("Autonomous").add(m_chooser);
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by instantiating a {@link GenericHID} or one of its subclasses
-   * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
-   * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
   private void configureButtonBindings() {
 
     // turnToAngle.whenPressed(new TurnToAngle(90, m_robotDrive).withTimeout(5));
@@ -90,7 +95,15 @@ public class RobotContainer {
     reset.whenPressed(new Reset());
     test.whenPressed(new Test());
     halfSpeed.toggleWhenPressed(robotCommands.halfSpeed);
-    collectorOn.whileHeld(robotCommands.collectorOn);
+
+    groundEject.whileHeld(robotCommands.groundEject);
+    collectorReverse.whileHeld(robotCommands.collectorReverse);
+    groundCollect.whileHeld(robotCommands.groundCollect);
+    humanCollect.whileHeld(robotCommands.humanCollect);
+    collectorUpDown.toggleWhenPressed(robotCommands.collectorUpDown);
+    
+    // shoot.whenPressed(robotCommands.shoot);
+    shooterOn.toggleWhenPressed(robotCommands.shooterOn);
 
   }
 

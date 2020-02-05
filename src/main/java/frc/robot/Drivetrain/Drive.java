@@ -13,17 +13,20 @@ import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Robot;
 import frc.robot.Mapping.Constants;
+import frc.robot.Mapping.RobotContainer;
 
 import static frc.robot.Mapping.Constants.*;
 
 public class Drive extends SubsystemBase {
 
     private double limitSpeed = 0;
-    private double limitRotate = 0;
+    double limitRotate = 0;
     private double scaleSpeed;
     private double scaleRotate;
     private final double moveAccelerationLimit = 0.05;
@@ -31,14 +34,16 @@ public class Drive extends SubsystemBase {
                                                          // low/sluggish
 
     private final double wheelDiamter = 6;
-    private final double wheelCircum = (Math.PI * wheelDiamter);
+    private final double wheelInMeters = 0.0254 * wheelDiamter;
+    private final double wheelCircum = ((Math.PI * 2) * wheelInMeters);
     // Encoder Scale Factor (Inches)/(Pulse)
-    private final double kScaleFactor = (1.0 / 4096.0) * wheelCircum / 6.5;
+    private final double kScaleFactor = (0.0254 / 4096.0) * wheelCircum;
+
+    private final DifferentialDrive m_drive = new DifferentialDrive(Constants.left, Constants.right);
 
     public Drive() {
 
         zeroHeading();
-        Robot.m_gyro.zeroYaw();
         resetEncoders();
 
     }
@@ -47,7 +52,7 @@ public class Drive extends SubsystemBase {
 
     public void arcadeDrive(double moveSpeed, double rotateSpeed) {
 
-        // Limits for speed, using quadratics and max/min
+      //  Limits for speed, using quadratics and max/min
         moveSpeed = deadband(moveSpeed);
         rotateSpeed = deadband(rotateSpeed);
 
@@ -87,9 +92,10 @@ public class Drive extends SubsystemBase {
             limitRotate = rotateSpeed;
         }
 
-        frontLeft.set(ControlMode.PercentOutput, -limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
-        frontRight.set(ControlMode.PercentOutput, +limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
-
+        // frontLeft.set(ControlMode.PercentOutput, -limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
+        // frontRight.set(ControlMode.PercentOutput, +limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
+        m_drive.arcadeDrive(limitSpeed, limitRotate);
+        
     }
 
     // Tank Drive, one Joystick controls the left, one controls the right.
@@ -189,7 +195,7 @@ public class Drive extends SubsystemBase {
         // System.out.println(Robot.m_gyro.getAngle());
         // System.out.println(getHeading());
         // System.out.println("Left");
-        System.out.println(getHeading());
+        // System.out.println(getLeftDistance());
         // System.out.println("Right");
         // System.out.println(getRightDistance());
 

@@ -10,18 +10,10 @@ import static frc.robot.Mapping.Constants.*;
 
 public class RobotCommands{
 
-    public final static Drive m_robotDrive = new Drive();
+    public final static Drive  m_robotDrive = new Drive();
     public final Shooter m_shooter = new Shooter();
     public final Collector m_collector = new Collector();
 
-
-   
-
-    // === Collector === //
-    public final InstantCommand collectorOn = new InstantCommand(
-        () -> m_collector.collectFromGround(), 
-        m_collector
-    );
 
     // === Drive === //
     public final StartEndCommand halfSpeed = new StartEndCommand(
@@ -29,5 +21,44 @@ public class RobotCommands{
         () -> m_robotDrive.setMaxOutput(1), 
         m_robotDrive);
 
+
+    // === Collector === //
+    public final InstantCommand groundEject = new InstantCommand(
+      //  () -> frontLeft.set(1)
+    );
+    public final InstantCommand collectorReverse = new InstantCommand(
+       // () -> frontLeft.set(1)
+    );
+    public final InstantCommand groundCollect = new InstantCommand(
+      //  () -> frontLeft.set(1)
+    );
+    public final InstantCommand humanCollect = new InstantCommand(
+      //  () -> frontLeft.set(1)
+    );
+    public final InstantCommand collectorUpDown = new InstantCommand(
+        //Pneumatic Piston
+      //  () -> frontLeft.set(1)
+    );
+
+    
+    // === Shooter === //
+    
+    public final InstantCommand shooterFar = new InstantCommand(
+     //   () -> frontLeft.set(1)
+    );
+    public final InstantCommand shooterNear = new InstantCommand(
+       // () -> frontLeft.set(1)
+    );
+
+    public final InstantCommand shooterOn = new InstantCommand(
+   // () -> frontLeft.set(1)
+);
+
+    // public final ConditionalCommand shoot = new ConditionalCommand(
+    //     Shooter.shoot, shooterOn, null //Set last term to check weather the shooter is up to speed, if so it will run the first command
+    // );
+
+
+    // === Climber === //
 }
 

@@ -3,6 +3,7 @@ package frc.robot.Mapping;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 public final class Constants {
 
@@ -33,15 +34,19 @@ public final class Constants {
   public static final int POVL = 270;
 
   // === DRIVE MOTORS === //
-  public static final int frontLeftDriveMotor = 3;
   public static final int backLeftDriveMotor = 1;
-  public static final int frontRightDriveMotor = 4;
   public static final int backRightDriveMotor = 2;
+  public static final int frontLeftDriveMotor = 3;
+  public static final int frontRightDriveMotor = 4;
+  
 
   public static final WPI_TalonFX frontLeft = new WPI_TalonFX(frontLeftDriveMotor);
   public static final WPI_TalonFX backLeft = new WPI_TalonFX(backLeftDriveMotor);
   public static final WPI_TalonFX frontRight = new WPI_TalonFX(frontRightDriveMotor);
   public static final WPI_TalonFX backRight = new WPI_TalonFX(backRightDriveMotor);
+
+  public static final SpeedControllerGroup left = new SpeedControllerGroup(frontLeft, backLeft);
+  public static final SpeedControllerGroup right = new SpeedControllerGroup(frontRight, backRight);
 
   // === ENCODER === //
   public static final double MM_TO_IN = 0.0393701;
@@ -52,14 +57,14 @@ public final class Constants {
   public static final int rightEncoderPort = 4;
   public static final int kEncoderCPR = 1024;
 
-  public static final double kWheelDiameterInches = 0; // TODO: Find out diameter of wheel inches
+  public static final double kWheelDiameterInches = 6; // TODO: Find out diameter of wheel inches
   public static final double kEncoderDistancePerPulse = (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR;
 
    // leftEncoder.setDistancePerPulse((2 * Math.PI * WHEEL_DIAMETER_INCHES) / PULSES_PER_ROTATION);
     
 
   // === GYRO === //
-  public static final boolean kGyroReversed = false;
+  public static final boolean kGyroReversed = true;
 
   // === TURN PID === //
   // USED IN TURNTOANGLE

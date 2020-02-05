@@ -31,6 +31,7 @@ public class DefaultDrive extends CommandBase {
 
   @Override
   public void execute() {
+    System.out.println("Test");
     m_drive.arcadeDrive(m_forward.getAsDouble(), m_rotation.getAsDouble());
   }
 }

@@ -18,8 +18,8 @@ public class SpeedControllerSetUp {
 
         frontLeft.setInverted(true);
         backLeft.setInverted(true);
-        frontRight.setInverted(false);
-        backRight.setInverted(false);
+        frontRight.setInverted(true);
+        backRight.setInverted(true);
 
         frontLeft.setNeutralMode(NeutralMode.Brake);
         frontRight.setNeutralMode(NeutralMode.Brake);
@@ -43,10 +43,9 @@ public class SpeedControllerSetUp {
     //     frontRight.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
         frontLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        frontLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 18);
-
+        frontLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 18);
         frontRight.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        frontRight.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 18);
+        frontRight.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 18);
 
         frontLeft.setSensorPhase(false);
         frontRight.setSensorPhase(false);
