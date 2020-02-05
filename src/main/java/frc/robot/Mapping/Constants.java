@@ -45,9 +45,6 @@ public final class Constants {
   public static final WPI_TalonFX frontRight = new WPI_TalonFX(frontRightDriveMotor);
   public static final WPI_TalonFX backRight = new WPI_TalonFX(backRightDriveMotor);
 
-  public static final SpeedControllerGroup left = new SpeedControllerGroup(frontLeft, backLeft);
-  public static final SpeedControllerGroup right = new SpeedControllerGroup(frontRight, backRight);
-
   // === ENCODER === //
   public static final double MM_TO_IN = 0.0393701;
   public static final double WHEEL_TO_WHEEL_DIAMETER_INCHES = 320 * MM_TO_IN;

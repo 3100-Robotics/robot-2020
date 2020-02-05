@@ -11,10 +11,17 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
+import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Robot;
@@ -25,6 +32,9 @@ import static frc.robot.Mapping.Constants.*;
 
 public class Drive extends SubsystemBase {
 
+    //-------------------------------
+    // Encoder constants
+    //-------------------------------
     private double limitSpeed = 0;
     double limitRotate = 0;
     private double scaleSpeed;
@@ -39,13 +49,88 @@ public class Drive extends SubsystemBase {
     // Encoder Scale Factor (Inches)/(Pulse)
     private final double kScaleFactor = (0.0254 / 4096.0) * wheelCircum;
 
-    private final DifferentialDrive m_drive = new DifferentialDrive(Constants.left, Constants.right);
+
+    //-------------------------------
+    // Speed Controllers
+    //-------------------------------
+    // Define left Speed Controller
+    private final SpeedControllerGroup left = 
+    new SpeedControllerGroup(frontLeft, backLeft);
+
+    // Define right Speed Controller
+    private final SpeedControllerGroup right = 
+    new SpeedControllerGroup(frontRight, backRight);
+
+    //-------------------------------
+    // Differential Drive
+    //-------------------------------
+    // Define Differential Drive
+    private final DifferentialDrive m_drive = new DifferentialDrive(left, right);
+
+    //-------------------------------
+    // Encoder, Gyro, and Odometer
+    //-------------------------------
+
+    /**
+     * Gets the average distance of the two encoders.
+     *
+     * @return the average of the two encoder readings
+     */
+    public double getAverageEncoderDistance() {
+        return (getLeftDistance() + getRightDistance()) / 2.0;
+    }
+
+    public double getLeftDistance() {
+        return (frontLeft.getSelectedSensorPosition(0) * kScaleFactor);
+    }
+
+    public double getRightDistance() {
+        return (frontRight.getSelectedSensorPosition(0) * kScaleFactor);// * 0.001;
+    }
+
+    public static void resetEncoders() {
+        frontLeft.setSelectedSensorPosition(0);
+        frontRight.setSelectedSensorPosition(0);
+    }
+
+    // Odometery class for tracking robot pose
+    private final DifferentialDriveOdometry m_odometry;
+
 
     public Drive() {
 
         zeroHeading();
         resetEncoders();
+        m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
+    }
+
+    /**
+     * Returns the currently-estimated pose of the robot.
+     *
+     * @return The pose.
+     */
+    public Pose2d getPose() {
+        return m_odometry.getPoseMeters();
+    }
+
+    /**
+     * Returns the current wheel speeds of the robot.
+     *
+     * @return The current wheel speeds.
+     */
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(frontLeft.getSelectedSensorVelocity(0), frontRight.getSelectedSensorVelocity(0));
+    }
+
+    /**
+     * Resets the odometry to the specified pose.
+     *
+     * @param pose The pose to which to set the odometry.
+     */
+    public void resetOdometry(Pose2d pose) {
+        resetEncoders();
+        m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     }
 
     // Arcade Drive, one Joystick controls forwards/backwards, the other controls
@@ -117,27 +202,6 @@ public class Drive extends SubsystemBase {
         frontLeft.set(ControlMode.PercentOutput, leftSpeed);
     }
 
-    /**
-     * Gets the average distance of the two encoders.
-     *
-     * @return the average of the two encoder readings
-     */
-    public double getAverageEncoderDistance() {
-        return (getLeftDistance() + getRightDistance()) / 2.0;
-    }
-
-    public double getLeftDistance() {
-        return (frontLeft.getSelectedSensorPosition(0) * kScaleFactor);
-    }
-
-    public double getRightDistance() {
-        return (frontRight.getSelectedSensorPosition(0) * kScaleFactor);// * 0.001;
-    }
-
-    public static void resetEncoders() {
-        frontLeft.setSelectedSensorPosition(0);
-        frontRight.setSelectedSensorPosition(0);
-    }
 
     /**
      * Sets the max output of the drive. Useful for scaling the drive to drive more
