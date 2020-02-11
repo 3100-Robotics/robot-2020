@@ -39,15 +39,19 @@ public class Drive extends SubsystemBase {
     double limitRotate = 0;
     private double scaleSpeed;
     private double scaleRotate;
-    private final double moveAccelerationLimit = 0.05;
+    private final double moveAccelerationLimit = 0.07;
     private final double rotateAccelerationLimit = 0.08; // Velocity - Tune for different drivetrain, if it's too
                                                          // low/sluggish
 
     private final double wheelDiamter = 6;
     private final double wheelInMeters = 0.0254 * wheelDiamter;
     private final double wheelCircum = ((Math.PI * 2) * wheelInMeters);
-    // Encoder Scale Factor (Inches)/(Pulse)
     private final double kScaleFactor = (0.0254 / 4096.0) * wheelCircum;
+    // Encoder Scale Factor (Meter)/(Pulse)
+    private final double encoderScale = (1 / ENCODER_EDGES_PER_REV) * WHEEL_DIAMETER * Math.PI;
+    
+    
+    
 
 
     //-------------------------------
@@ -81,11 +85,11 @@ public class Drive extends SubsystemBase {
     }
 
     public double getLeftDistance() {
-        return (frontLeft.getSelectedSensorPosition(0) * kScaleFactor);
+        return (frontLeft.getSelectedSensorPosition(0) * encoderScale);
     }
 
     public double getRightDistance() {
-        return (frontRight.getSelectedSensorPosition(0) * kScaleFactor);// * 0.001;
+        return (frontRight.getSelectedSensorPosition(0) * encoderScale);// * 0.001;
     }
 
     public static void resetEncoders() {
@@ -142,7 +146,7 @@ public class Drive extends SubsystemBase {
         rotateSpeed = deadband(rotateSpeed);
 
         scaleSpeed = moveSpeed < 0 ? -0.8 : 0.8;
-        scaleRotate = rotateSpeed < 0 ? -0.6 : 0.6;
+        scaleRotate = rotateSpeed < 0 ? -0.75 : 0.75;
 
         moveSpeed *= scaleSpeed * moveSpeed;
         rotateSpeed *= scaleRotate * rotateSpeed;
@@ -201,6 +205,12 @@ public class Drive extends SubsystemBase {
         frontRight.set(ControlMode.PercentOutput, rightSpeed);
         frontLeft.set(ControlMode.PercentOutput, leftSpeed);
     }
+
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+        left.setVoltage(leftVolts);
+        right.setVoltage(-rightVolts);
+        m_drive.feed();
+      }
 
 
     /**

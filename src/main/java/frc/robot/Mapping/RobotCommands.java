@@ -3,8 +3,9 @@ package frc.robot.Mapping;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Autonomous.TurnToAngle2;
 import frc.robot.Drivetrain.Drive;
-import frc.robot.Shooter.Shooter;
+
 import frc.robot.Subsystems.Collector;
+import frc.robot.Subsystems.Shooter;
 
 import static frc.robot.Mapping.Constants.*;
 
@@ -23,35 +24,57 @@ public class RobotCommands{
 
 
     // === Collector === //
-    public final InstantCommand groundEject = new InstantCommand(
-      //  () -> frontLeft.set(1)
+    public final StartEndCommand groundEject = new StartEndCommand(
+      //Sets the collector motor to reverse
+        () -> m_collector.groundEject(0.5),
+        () -> m_collector.groundEject(0),
+        m_collector
     );
-    public final InstantCommand collectorReverse = new InstantCommand(
-       // () -> frontLeft.set(1)
+    public final StartEndCommand collectorReverse = new StartEndCommand (
+      //Sets both the collector and conveyor motors to reverse
+        () -> m_collector.collectorReverse(0.5),
+        () -> m_collector.collectorReverse(0),
+        m_collector
     );
-    public final InstantCommand groundCollect = new InstantCommand(
-      //  () -> frontLeft.set(1)
+    public final StartEndCommand groundCollect = new StartEndCommand (
+      //Sets both the collector and conveyor motors to take in balls
+        () -> m_collector.groundCollect(0.5),
+        () -> m_collector.groundCollect(0),
+        m_collector
     );
-    public final InstantCommand humanCollect = new InstantCommand(
-      //  () -> frontLeft.set(1)
+    public final StartEndCommand humanCollect = new StartEndCommand(
+      () -> m_collector.humanCollect(0.5),
+      () -> m_collector.humanCollect(0)
     );
-    public final InstantCommand collectorUpDown = new InstantCommand(
-        //Pneumatic Piston
-      //  () -> frontLeft.set(1)
+    public final StartEndCommand deployCollector = new StartEndCommand(
+      //Deploys the collector
+        () -> m_collector.deployCollector(), () -> m_collector.retractCollector(), 
+        m_collector
     );
-
     
     // === Shooter === //
     
     public final InstantCommand shooterFar = new InstantCommand(
-     //   () -> frontLeft.set(1)
+        () -> m_shooter.shooterPositon(1),
+        m_shooter
     );
     public final InstantCommand shooterNear = new InstantCommand(
-       // () -> frontLeft.set(1)
+        () -> m_shooter.shooterPositon(0),
+        m_shooter
     );
 
-    public final InstantCommand shooterOn = new InstantCommand(
-   // () -> frontLeft.set(1)
+    public final StartEndCommand shooterRev = new StartEndCommand(
+    () -> m_shooter.shooterRev(0.50, 0.50),
+    () -> m_shooter.shooterRev(0, 0),
+    m_shooter
+
+);
+
+public final StartEndCommand shoot = new StartEndCommand(
+    () -> m_shooter.shoot(0.50, 0.50, 0.9),
+    () -> m_shooter.shoot(0, 0, 0),
+    m_shooter
+
 );
 
     // public final ConditionalCommand shoot = new ConditionalCommand(

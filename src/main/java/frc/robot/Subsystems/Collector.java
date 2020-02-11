@@ -1,44 +1,78 @@
 package frc.robot.Subsystems;
 
+import java.util.function.BooleanSupplier;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Mapping.Constants;
 
 public class Collector extends SubsystemBase {
 
-private boolean isDeployed;
+public boolean isDeployed = false;
+
+public final BooleanSupplier isDeployedSupplier = () -> isDeployed;
 
 public Collector(){
 
+    
 }
 
 public void deployCollector(){
 
     //Set Piston to extend/retract
+    // Constants.intakeSolenoid.set(true);
+    isDeployed = true;
 
 }
 
-public void collectFromGround(){
+public void retractCollector(){
 
-    //Set Two Motors to run
-
-}
-
-public void collectFromPlayer(){
-
-    //Conveyor motor on, and ground collector in reverse
+    // Constants.intakeSolenoid.set(false);
+    isDeployed = false;
 
 }
 
-public void groundDispense(){
+public void updateBooleans() {
+    BooleanSupplier isDeployedSupplier = () -> isDeployed;
+}
+
+public void groundEject(double speed){
+
+    Constants.collector.set(ControlMode.PercentOutput, speed);
+
+}
+
+public void wheelSpeed(double speed){
 
     //Reverse Conveyor and collector
+    Constants.collector.set(ControlMode.PercentOutput, speed);
+    Constants.conveyor.set(ControlMode.PercentOutput, speed);
+
+}
+public void collectorReverse(double speed){
+
+    //Reverse Conveyor and collector
+    Constants.collector.set(ControlMode.PercentOutput, speed);
+    Constants.conveyor.set(ControlMode.PercentOutput, -speed);
 
 }
 
-public void reverseGround(){
 
-    //Reverses ground collector
+public void humanCollect(double speed){
+
+    Constants.conveyor.set(ControlMode.PercentOutput, speed * 1.5);
+    Constants.collector.set(ControlMode.PercentOutput, speed);
+}
+public void groundCollect(double speed){
+
+    //Reverse Conveyor and collector
+    Constants.collector.set(ControlMode.PercentOutput, -speed);
+    Constants.conveyor.set(ControlMode.PercentOutput, speed);
+    Constants.injector.set(ControlMode.PercentOutput, speed);
 
 }
-
 
 }

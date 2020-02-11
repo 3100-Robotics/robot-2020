@@ -16,6 +16,24 @@ public class SpeedControllerSetUp {
         frontRight.configFactoryDefault();
         backRight.configFactoryDefault();
 
+        conveyor.configFactoryDefault();
+        collector.configFactoryDefault();
+        injector.configFactoryDefault();
+
+        shooterTop.configFactoryDefault();
+        shooterBottom.configFactoryDefault();
+        /*
+
+        conveyor.
+        collector.
+        injector.
+
+        shooterTop.
+        shooterBottom.
+
+        */
+
+
         frontLeft.setInverted(true);
         backLeft.setInverted(true);
         frontRight.setInverted(true);
@@ -25,6 +43,14 @@ public class SpeedControllerSetUp {
         frontRight.setNeutralMode(NeutralMode.Brake);
         backLeft.setNeutralMode(NeutralMode.Brake);
         backRight.setNeutralMode(NeutralMode.Brake);
+
+        conveyor.setNeutralMode(NeutralMode.Brake);
+        collector.setNeutralMode(NeutralMode.Brake);
+        injector.setNeutralMode(NeutralMode.Brake);
+
+        shooterTop.setNeutralMode(NeutralMode.Coast);
+        shooterBottom.setNeutralMode(NeutralMode.Coast);
+        
 
         backLeft.follow(frontLeft);
         backRight.follow(frontRight);
@@ -42,10 +68,9 @@ public class SpeedControllerSetUp {
     //    frontLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     //     frontRight.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
-        frontLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        frontLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 18);
-        frontRight.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        frontRight.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 18);
+        frontLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
+        frontRight.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
+   
 
         frontLeft.setSensorPhase(false);
         frontRight.setSensorPhase(false);
@@ -61,7 +86,7 @@ public class SpeedControllerSetUp {
         frontRight.configPeakOutputReverse(-1);
 
 
-        // Possibly use currnt stuff to get shooting motor to speed
+        // Possibly use current stuff to get shooting motor to speed
         // TalonSRX talon = new TalonSRX(0);
         // talon.configPeakCurrentLimit(30); // don't activate current limit until
         // current exceeds 30 A ...
