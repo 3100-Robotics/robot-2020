@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class AxisButton extends Trigger {
+
     GenericHID m_joystick;
     int m_axisNumber;
     private double THRESHOLD = 0.5;
@@ -15,12 +16,7 @@ public class AxisButton extends Trigger {
         m_joystick = joystick;
         m_axisNumber = axisNumber;
     }
-    
-    public AxisButton(GenericHID joystick, int axisNumber, double threshold) {
-        m_joystick = joystick;
-        m_axisNumber = axisNumber;
-        THRESHOLD = threshold;
-    }
+
 
 
     public boolean get() {

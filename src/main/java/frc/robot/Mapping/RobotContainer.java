@@ -51,9 +51,6 @@ public class RobotContainer {
   // TECH CONTROLLER
   public final static XboxController m_techController = new XboxController(Constants.TechControllerPort);
 
-  public final Trigger testt = new Trigger();
-
-  
 
   // === Drive === //
 
@@ -80,7 +77,6 @@ public class RobotContainer {
   // === Climber === //
   private final JoystickButton climberControl = new JoystickButton(m_techController, Constants.leftYAxisChannel);
 
-  private final POVButton test = new POVButton(m_driveController, Constants.POVU);
 
   private final Command AutoRoute = new AutoRoute(m_robotDrive);
    // A chooser for autonomous commands
@@ -114,12 +110,12 @@ public class RobotContainer {
     turnToAngle.whileHeld(new TurnToAngle2(90, 0.4, m_robotDrive));
     driveForward.whileHeld(new DriveForward(60, 0.4, m_robotDrive));
     reset.whileHeld(new Reset());
-    test.whileHeld(new Test());
     halfSpeed.toggleWhenActive(robotCommands.halfSpeed);
    
-    groundEject.toggleWhenActive(robotCommands.groundEject);
+    groundEject.whileActiveContinuous(robotCommands.groundEject);
     collectorReverse.whileHeld(robotCommands.collectorReverse);
-    groundCollect.toggleWhenActive(robotCommands.groundCollect);
+    groundCollect.whileActiveContinuous(robotCommands.groundCollect);
+    groundCollect.whenInactive(robotCommands.reverseInjector.withTimeout(1));
     humanCollect.whileHeld(robotCommands.humanCollect);
     deployCollector.toggleWhenPressed(robotCommands.deployCollector);
     

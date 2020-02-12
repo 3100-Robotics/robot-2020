@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Mapping.Constants;
 
 public class Collector extends SubsystemBase {
@@ -65,13 +66,21 @@ public void humanCollect(double speed){
 
     Constants.conveyor.set(ControlMode.PercentOutput, speed * 1.5);
     Constants.collector.set(ControlMode.PercentOutput, speed);
+
+    
 }
 public void groundCollect(double speed){
 
     //Reverse Conveyor and collector
     Constants.collector.set(ControlMode.PercentOutput, -speed);
     Constants.conveyor.set(ControlMode.PercentOutput, speed);
+
+}
+
+public void reverseInjector(double speed){
+
     Constants.injector.set(ControlMode.PercentOutput, speed);
+    
 
 }
 

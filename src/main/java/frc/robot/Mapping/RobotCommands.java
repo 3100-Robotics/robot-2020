@@ -39,13 +39,21 @@ public class RobotCommands{
     public final StartEndCommand groundCollect = new StartEndCommand (
       //Sets both the collector and conveyor motors to take in balls
         () -> m_collector.groundCollect(0.5),
-        () -> m_collector.groundCollect(0),
+        () -> m_collector.groundCollect(0.0),
         m_collector
     );
     public final StartEndCommand humanCollect = new StartEndCommand(
       () -> m_collector.humanCollect(0.5),
-      () -> m_collector.humanCollect(0)
+      () -> m_collector.humanCollect(0),
+      m_collector
     );
+
+    public final StartEndCommand reverseInjector = new StartEndCommand(
+      () -> m_collector.reverseInjector(0.3),
+      () -> m_collector.reverseInjector(0.0)
+
+    );
+
     public final StartEndCommand deployCollector = new StartEndCommand(
       //Deploys the collector
         () -> m_collector.deployCollector(), () -> m_collector.retractCollector(), 
@@ -64,14 +72,14 @@ public class RobotCommands{
     );
 
     public final StartEndCommand shooterRev = new StartEndCommand(
-    () -> m_shooter.shooterRev(0.50, 0.50),
+    () -> m_shooter.shooterRev(0.35, 0.35),
     () -> m_shooter.shooterRev(0, 0),
     m_shooter
 
 );
 
 public final StartEndCommand shoot = new StartEndCommand(
-    () -> m_shooter.shoot(0.50, 0.50, 0.9),
+    () -> m_shooter.shoot(0.35, 0.35, 0.9),
     () -> m_shooter.shoot(0, 0, 0),
     m_shooter
 
