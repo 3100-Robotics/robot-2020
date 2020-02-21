@@ -1,34 +1,37 @@
 package frc.robot.Spline;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.util.Units;
 
-public class ExampleTrajectory {
-    public void generateTrajectory() {
+public class ExampleTrajectory{
+
+    public ExampleTrajectory() {
   
-      // 2018 cross scale auto waypoints.
-      var sideStart = new Pose2d(Units.feetToMeters(1.54), Units.feetToMeters(23.23),
-          Rotation2d.fromDegrees(-180));
-      var crossScale = new Pose2d(Units.feetToMeters(23.7), Units.feetToMeters(6.8),
-          Rotation2d.fromDegrees(-160));
+      // S-Spline Test
+      var TestStart = new Pose2d(Units.feetToMeters(0.0), Units.feetToMeters(0.0),
+          Rotation2d.fromDegrees(0));
+      var TestEnd = new Pose2d(Units.feetToMeters(3.0), Units.feetToMeters(5.0),
+          Rotation2d.fromDegrees(0));
   
       var interiorWaypoints = new ArrayList<Translation2d>();
-      interiorWaypoints.add(new Translation2d(Units.feetToMeters(14.54), Units.feetToMeters(23.23)));
-      interiorWaypoints.add(new Translation2d(Units.feetToMeters(21.04), Units.feetToMeters(18.23)));
+      interiorWaypoints.add(new Translation2d(Units.feetToMeters(1.5), Units.feetToMeters(3.0)));
+      interiorWaypoints.add(new Translation2d(Units.feetToMeters(3.0), Units.feetToMeters(0)));
   
-      TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(12), Units.feetToMeters(12));
-      config.setReversed(true);
+      TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(6), Units.feetToMeters(6));
+      //config.setReversed(false);
   
-      var trajectory = TrajectoryGenerator.generateTrajectory(
-          sideStart,
+          final var trajectory = TrajectoryGenerator.generateTrajectory(
+          TestStart,
           interiorWaypoints,
-          crossScale,
+          TestEnd,
           config);
     }
   }

@@ -12,9 +12,9 @@ import frc.robot.Mapping.Constants;
 
 public class Collector extends SubsystemBase {
 
-public boolean isDeployed = false;
+public static boolean isDeployed = false;
 
-public final BooleanSupplier isDeployedSupplier = () -> isDeployed;
+public final static BooleanSupplier isDeployedSupplier = () -> isDeployed;
 
 public Collector(){
 
@@ -24,14 +24,19 @@ public Collector(){
 public void deployCollector(){
 
     //Set Piston to extend/retract
-    // Constants.intakeSolenoid.set(true);
+    Constants.intakeSolenoid.set(true);
+    Constants.intakeSolenoid2.set(true);
+
+
     isDeployed = true;
 
 }
 
 public void retractCollector(){
 
-    // Constants.intakeSolenoid.set(false);
+    Constants.intakeSolenoid.set(false);
+    Constants.intakeSolenoid2.set(false);
+   
     isDeployed = false;
 
 }
@@ -46,40 +51,47 @@ public void groundEject(double speed){
 
 }
 
-public void wheelSpeed(double speed){
+public void wheelSpeed(double collectspeed, double conveyorspeed){
 
     //Reverse Conveyor and collector
-    Constants.collector.set(ControlMode.PercentOutput, speed);
-    Constants.conveyor.set(ControlMode.PercentOutput, speed);
+    Constants.collector.set(ControlMode.PercentOutput, collectspeed);
+    Constants.conveyor.set(ControlMode.PercentOutput, conveyorspeed);
 
 }
-public void collectorReverse(double speed){
+public void collectorReverse(double collectspeed, double conveyorspeed, double shooterspeed){
 
     //Reverse Conveyor and collector
-    Constants.collector.set(ControlMode.PercentOutput, speed);
-    Constants.conveyor.set(ControlMode.PercentOutput, -speed);
+    Constants.collector.set(ControlMode.PercentOutput, collectspeed);
+    Constants.injector.set(ControlMode.PercentOutput, collectspeed * 2);
+    Constants.conveyor.set(ControlMode.PercentOutput, -conveyorspeed);
+    Constants.shooterTop.set(ControlMode.PercentOutput, shooterspeed);
+    Constants.shooterBottom.set(ControlMode.PercentOutput, -shooterspeed);
+
 
 }
 
 
-public void humanCollect(double speed){
+public void humanCollect(double collectspeed, double conveyorspeed){
 
-    Constants.conveyor.set(ControlMode.PercentOutput, speed * 1.5);
-    Constants.collector.set(ControlMode.PercentOutput, speed);
+    Constants.conveyor.set(ControlMode.PercentOutput, conveyorspeed);
+    Constants.collector.set(ControlMode.PercentOutput, collectspeed);
 
     
 }
-public void groundCollect(double speed){
+public void groundCollect(double collectspeed, double conveyorspeed){
 
     //Reverse Conveyor and collector
-    Constants.collector.set(ControlMode.PercentOutput, -speed);
-    Constants.conveyor.set(ControlMode.PercentOutput, speed);
+    Constants.collector.set(ControlMode.PercentOutput, -collectspeed);
+    Constants.conveyor.set(ControlMode.PercentOutput, conveyorspeed);
 
 }
 
 public void reverseInjector(double speed){
 
     Constants.injector.set(ControlMode.PercentOutput, speed);
+    Constants.shooterTop.set(ControlMode.PercentOutput, speed * 0.5);
+    Constants.shooterBottom.set(ControlMode.PercentOutput, -speed * 0.5);
+
     
 
 }

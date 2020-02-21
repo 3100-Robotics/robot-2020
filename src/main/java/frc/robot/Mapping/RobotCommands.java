@@ -1,5 +1,6 @@
 package frc.robot.Mapping;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Autonomous.TurnToAngle2;
 import frc.robot.Drivetrain.Drive;
@@ -16,12 +17,6 @@ public class RobotCommands{
     public final Collector m_collector = new Collector();
 
 
-    // === Drive === //
-    public final StartEndCommand halfSpeed = new StartEndCommand(
-        () -> m_robotDrive.setMaxOutput(0.5), 
-        () -> m_robotDrive.setMaxOutput(1), 
-        m_robotDrive);
-
 
     // === Collector === //
     public final StartEndCommand groundEject = new StartEndCommand(
@@ -32,19 +27,19 @@ public class RobotCommands{
     );
     public final StartEndCommand collectorReverse = new StartEndCommand (
       //Sets both the collector and conveyor motors to reverse
-        () -> m_collector.collectorReverse(0.5),
-        () -> m_collector.collectorReverse(0),
+        () -> m_collector.collectorReverse(0.3, 0.4, 0.3),
+        () -> m_collector.collectorReverse(0.0, 0.0, 0.0),
         m_collector
     );
     public final StartEndCommand groundCollect = new StartEndCommand (
       //Sets both the collector and conveyor motors to take in balls
-        () -> m_collector.groundCollect(0.5),
-        () -> m_collector.groundCollect(0.0),
+        () -> m_collector.groundCollect(0.6, 0.8),
+        () -> m_collector.groundCollect(0.0, 0.0),
         m_collector
     );
     public final StartEndCommand humanCollect = new StartEndCommand(
-      () -> m_collector.humanCollect(0.5),
-      () -> m_collector.humanCollect(0),
+      () -> m_collector.humanCollect(0.6, 0.8),
+      () -> m_collector.humanCollect(0.0, 0.0),
       m_collector
     );
 
@@ -54,36 +49,50 @@ public class RobotCommands{
 
     );
 
-    public final StartEndCommand deployCollector = new StartEndCommand(
+    public final InstantCommand deployCollector = new InstantCommand(
       //Deploys the collector
-        () -> m_collector.deployCollector(), () -> m_collector.retractCollector(), 
-        m_collector
+        () -> m_collector.deployCollector()
     );
+    public final InstantCommand retractCollector = new InstantCommand(
+      //Deploys the collector
+        () -> m_collector.retractCollector()
+    );
+    public final ConditionalCommand collector = new ConditionalCommand(retractCollector, deployCollector, Collector.isDeployedSupplier);
     
     // === Shooter === //
     
     public final InstantCommand shooterFar = new InstantCommand(
-        () -> m_shooter.shooterPositon(1),
-        m_shooter
+        () -> m_shooter.shooterFar()
+
     );
     public final InstantCommand shooterNear = new InstantCommand(
-        () -> m_shooter.shooterPositon(0),
-        m_shooter
+        () -> m_shooter.shooterNear()
+
     );
 
-    public final StartEndCommand shooterRev = new StartEndCommand(
-    () -> m_shooter.shooterRev(0.35, 0.35),
-    () -> m_shooter.shooterRev(0, 0),
-    m_shooter
+    public final ConditionalCommand shooterPos = new ConditionalCommand(shooterFar, shooterNear, Shooter.isDeployedSupplier);
 
-);
+    public final InstantCommand shooterStart = new InstantCommand(
+    () -> m_shooter.shooterRev());
 
-public final StartEndCommand shoot = new StartEndCommand(
-    () -> m_shooter.shoot(0.35, 0.35, 0.9),
-    () -> m_shooter.shoot(0, 0, 0),
-    m_shooter
+    public final InstantCommand shooterStop = new InstantCommand(
+    () -> m_shooter.shooterStop());
 
-);
+    public final InstantCommand incrimentUp = new InstantCommand(
+      () -> m_shooter.incrimentUp()
+    );
+    public final InstantCommand incrimentDown = new InstantCommand(
+      () -> m_shooter.incrimentDown()
+    );
+
+    public final ConditionalCommand shooterRev = new ConditionalCommand(shooterStop, shooterStart, Shooter.isOnSupplier);
+
+    public final StartEndCommand shoot = new StartEndCommand(
+        () -> m_shooter.shoot(1, 0.9),
+        () -> m_shooter.shoot(0, 0)
+      //  m_shooter
+
+    );
 
     // public final ConditionalCommand shoot = new ConditionalCommand(
     //     Shooter.shoot, shooterOn, null //Set last term to check weather the shooter is up to speed, if so it will run the first command
@@ -91,5 +100,6 @@ public final StartEndCommand shoot = new StartEndCommand(
 
 
     // === Climber === //
+
 }
 

@@ -36,7 +36,7 @@ public class Drive extends SubsystemBase {
     // Encoder constants
     //-------------------------------
     private double limitSpeed = 0;
-    double limitRotate = 0;
+    private double limitRotate = 0;
     private double scaleSpeed;
     private double scaleRotate;
     private final double moveAccelerationLimit = 0.07;
@@ -145,8 +145,9 @@ public class Drive extends SubsystemBase {
         moveSpeed = deadband(moveSpeed);
         rotateSpeed = deadband(rotateSpeed);
 
-        scaleSpeed = moveSpeed < 0 ? -0.8 : 0.8;
-        scaleRotate = rotateSpeed < 0 ? -0.75 : 0.75;
+        //Normal is 0.8 move, 0.75 rotate
+        scaleSpeed = moveSpeed < 0 ? -0.6 : 0.6;
+        scaleRotate = rotateSpeed < 0 ? -0.55 : 0.55;
 
         moveSpeed *= scaleSpeed * moveSpeed;
         rotateSpeed *= scaleRotate * rotateSpeed;

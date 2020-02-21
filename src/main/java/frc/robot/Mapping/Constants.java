@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public final class Constants {
@@ -65,8 +66,9 @@ public final class Constants {
 
   // === SOLENOID === //
   // TODO: Find values of Solenoid and motors
-  // public static final Solenoid intakeSolenoid = new Solenoid(0);
-  // public static final Solenoid angleSolenoid = new Solenoid(0);
+  public static final Solenoid intakeSolenoid = new Solenoid(41, 1);
+  public static final Solenoid intakeSolenoid2 = new Solenoid(41, 2);
+  public static final Solenoid angleSolenoid = new Solenoid(41, 3);
 
   // === ENCODER === //
   public static final double MM_TO_IN = 0.0393701;
@@ -88,8 +90,8 @@ public final class Constants {
   public static final double kPDriveVel = 8.5;
   public static final double kTrackwidthMeters = 0.69;
   public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
-  public static final double kMaxSpeedMetersPerSecond = 3;
-  public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+  public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(3);
+  public static final double kMaxAccelerationMetersPerSecondSquared = Units.feetToMeters(3);
   public static final double kRamseteB = 2;
   public static final double kRamseteZeta = 0.7;
 
@@ -114,6 +116,12 @@ public final class Constants {
   // === JOYSTICK PORTS === //
   public static final int DriveControllerPort = 0;
   public static final int TechControllerPort = 1;
+
+
+  // === SPEED CONSTANTS === //
+
+  public static final double speedTop = 0.35;
+  public static final double speedBottom = 0.35;
 
 }
 
