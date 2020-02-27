@@ -2,14 +2,13 @@ package frc.robot.Mapping;
 
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.AnalogInput;
+
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
+
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Units;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public final class Constants {
 
@@ -65,10 +64,15 @@ public final class Constants {
   public static final WPI_TalonFX shooterBottom = new WPI_TalonFX(shooterBottomChannel);
 
   // === SOLENOID === //
-  // TODO: Find values of Solenoid and motors
   public static final Solenoid intakeSolenoid = new Solenoid(41, 1);
   public static final Solenoid intakeSolenoid2 = new Solenoid(41, 2);
   public static final Solenoid angleSolenoid = new Solenoid(41, 3);
+  public static final Solenoid angleSolenoidExhaust = new Solenoid(41, 0);
+
+  // === BEAM BREAK === //
+
+  public static final AnalogInput lightSensorHigh = new AnalogInput(1);
+  public static final AnalogInput lightSensorLow = new AnalogInput(2);
 
   // === ENCODER === //
   public static final double MM_TO_IN = 0.0393701;
@@ -84,14 +88,16 @@ public final class Constants {
 
   // === PROFILE === //
 
-  public static final double ksVolts = 0.22;
-  public static final double kvVoltSecondsPerMeter = 1.98;
-  public static final double kaVoltSecondsSquaredPerMeter = 0.2;
-  public static final double kPDriveVel = 8.5;
-  public static final double kTrackwidthMeters = 0.69;
+  // TODO: RUN CHARACTERIZATION AND CHANGE
+
+  public static final double ksVolts = 0.252;
+  public static final double kvVoltSecondsPerMeter = 2.24;
+  public static final double kaVoltSecondsSquaredPerMeter = 0.266;
+  public static final double kPDriveVel = 0.0014;
+  public static final double kTrackwidthMeters = 0.8339247986341132;
   public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
-  public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(3);
-  public static final double kMaxAccelerationMetersPerSecondSquared = Units.feetToMeters(3);
+  public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(0.5);
+  public static final double kMaxAccelerationMetersPerSecondSquared = Units.feetToMeters(0.5);
   public static final double kRamseteB = 2;
   public static final double kRamseteZeta = 0.7;
 
@@ -117,7 +123,6 @@ public final class Constants {
   public static final int DriveControllerPort = 0;
   public static final int TechControllerPort = 1;
 
-
   // === SPEED CONSTANTS === //
 
   public static final double speedTop = 0.35;
@@ -125,10 +130,9 @@ public final class Constants {
 
 }
 
+// TODO: This is what I can use to test PID Tuning
+// RobotMap.driveControls.getRightTrigger() * 22000
 
-    // TODO: This is what I can use to test PID Tuning
-        // RobotMap.driveControls.getRightTrigger() * 22000
-
-        // RobotMap.driveControls.getRightTrigger();
-        // RobotMap.rightDriveMotor.set(ControlMode.Velocity, 11000); //22000 is
-        // maximum, 100% power
+// RobotMap.driveControls.getRightTrigger();
+// RobotMap.rightDriveMotor.set(ControlMode.Velocity, 11000); //22000 is
+// maximum, 100% power

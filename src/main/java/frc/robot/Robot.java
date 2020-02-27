@@ -7,30 +7,19 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Mapping.Constants;
 import frc.robot.Mapping.RobotContainer;
 import frc.robot.Mapping.SpeedControllerSetUp;
-import frc.robot.Spline.ExampleTrajectory;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -41,10 +30,7 @@ import frc.robot.Spline.ExampleTrajectory;
  */
 public class Robot extends TimedRobot {
 
-
-public static final Trajectory exampleTrajectory = null;
-
-// If mode = 1, Arcade
+  // If mode = 1, Arcade
   // If mode = 2, Tank
   public static int mode = 1;
 
@@ -64,47 +50,16 @@ public static final Trajectory exampleTrajectory = null;
   // private SendableChooser<Character> autoGroup;
   // private SendableChooser<Command> chooser = new SendableChooser<>();
 
+  public static double v;
+  public static double x;
+  double y;
+  double a;
+
   // Initalizing
   public void robotInit() {
-  
-      // S-Spline Test
-      var TestStart = new Pose2d(Units.feetToMeters(0.0), Units.feetToMeters(0.0),
-          Rotation2d.fromDegrees(0));
-      var TestEnd = new Pose2d(Units.feetToMeters(3.0), Units.feetToMeters(5.0),
-          Rotation2d.fromDegrees(0));
-  
-      var interiorWaypoints = new ArrayList<Translation2d>();
-      interiorWaypoints.add(new Translation2d(Units.feetToMeters(1.5), Units.feetToMeters(3.0)));
-      interiorWaypoints.add(new Translation2d(Units.feetToMeters(3.0), Units.feetToMeters(0)));
-  
-      TrajectoryConfig config = new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,Constants.kMaxAccelerationMetersPerSecondSquared);
-      //config.setReversed(false);
-  
-          Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-          TestStart,
-          interiorWaypoints,
-          TestEnd,
-          config);
-    
-    
-
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTableEntry tx = table.getEntry("tx");
-    NetworkTableEntry ty = table.getEntry("ty");
-    NetworkTableEntry ta = table.getEntry("ta");
-
-    // read values periodically
-    double x = tx.getDouble(0.0);
-    double y = ty.getDouble(0.0);
-    double area = ta.getDouble(0.0);
-
-    // post to smart dashboard periodically
-    SmartDashboard.putNumber("LimelightX", x);
-    SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
 
     // Sets up the camera
-    // CameraServer.getInstance().startAutomaticCapture();
+    CameraServer.getInstance().startAutomaticCapture();
     // For limelight, use 10.31.0.1:5801
 
     // Gets what type of game is being played, not that important
@@ -137,6 +92,23 @@ public static final Trajectory exampleTrajectory = null;
   public void robotPeriodic() {
     // Runs the Scheduler
     CommandScheduler.getInstance().run();
+
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTableEntry tv = table.getEntry("tv");
+    NetworkTableEntry tx = table.getEntry("tx");
+    NetworkTableEntry ty = table.getEntry("ty");
+    NetworkTableEntry ta = table.getEntry("ta");
+
+    // read values periodically
+    v = tv.getDouble(0.0);
+    x = tx.getDouble(0.0);
+    y = ty.getDouble(0.0);
+    a = ta.getDouble(0.0);
+
+    // post to smart dashboard periodically
+    SmartDashboard.putNumber("LimelightX", x);
+    SmartDashboard.putNumber("LimelightY", y);
+    SmartDashboard.putNumber("LimelightArea", a);
   }
 
   @Override
@@ -153,6 +125,7 @@ public static final Trajectory exampleTrajectory = null;
    */
   @Override
   public void autonomousInit() {
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -175,7 +148,6 @@ public static final Trajectory exampleTrajectory = null;
     // continue until interrupted by another command, remove
     // this line or comment it out.
 
-    
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

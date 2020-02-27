@@ -1,18 +1,14 @@
 package frc.robot.Mapping;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.Autonomous.TurnToAngle2;
 import frc.robot.Drivetrain.Drive;
-
 import frc.robot.Subsystems.Collector;
 import frc.robot.Subsystems.Shooter;
 
-import static frc.robot.Mapping.Constants.*;
 
 public class RobotCommands{
 
-    public final static Drive  m_robotDrive = new Drive();
+    public final static Drive m_robotDrive = new Drive();
     public final Shooter m_shooter = new Shooter();
     public final Collector m_collector = new Collector();
 
@@ -38,6 +34,7 @@ public class RobotCommands{
         m_collector
     );
     public final StartEndCommand humanCollect = new StartEndCommand(
+      //TODO: CHECK/ADJUST VALUES 
       () -> m_collector.humanCollect(0.6, 0.8),
       () -> m_collector.humanCollect(0.0, 0.0),
       m_collector
@@ -50,17 +47,23 @@ public class RobotCommands{
     );
 
     public final InstantCommand deployCollector = new InstantCommand(
-      //Deploys the collector
         () -> m_collector.deployCollector()
     );
     public final InstantCommand retractCollector = new InstantCommand(
-      //Deploys the collector
         () -> m_collector.retractCollector()
     );
     public final ConditionalCommand collector = new ConditionalCommand(retractCollector, deployCollector, Collector.isDeployedSupplier);
+
+
+   // === Beam Breaks === //
+
+    public final RunCommand beam = new RunCommand(
+      () -> m_collector.lightCheck()
+    );
+
+
     
     // === Shooter === //
-    
     public final InstantCommand shooterFar = new InstantCommand(
         () -> m_shooter.shooterFar()
 
@@ -70,33 +73,50 @@ public class RobotCommands{
 
     );
 
-    public final ConditionalCommand shooterPos = new ConditionalCommand(shooterFar, shooterNear, Shooter.isDeployedSupplier);
 
-    public final InstantCommand shooterStart = new InstantCommand(
-    () -> m_shooter.shooterRev());
+
+    public final InstantCommand shooterRevUp = new InstantCommand(
+      () -> m_shooter.shooterRev()
+
+    );
+
+
 
     public final InstantCommand shooterStop = new InstantCommand(
-    () -> m_shooter.shooterStop());
+      () -> m_shooter.shooterStop()
+
+    );
+
 
     public final InstantCommand incrimentUp = new InstantCommand(
       () -> m_shooter.incrimentUp()
+
     );
     public final InstantCommand incrimentDown = new InstantCommand(
       () -> m_shooter.incrimentDown()
-    );
-
-    public final ConditionalCommand shooterRev = new ConditionalCommand(shooterStop, shooterStart, Shooter.isOnSupplier);
-
-    public final StartEndCommand shoot = new StartEndCommand(
-        () -> m_shooter.shoot(1, 0.9),
-        () -> m_shooter.shoot(0, 0)
-      //  m_shooter
 
     );
+ 
 
-    // public final ConditionalCommand shoot = new ConditionalCommand(
-    //     Shooter.shoot, shooterOn, null //Set last term to check weather the shooter is up to speed, if so it will run the first command
-    // );
+
+
+   // public final ConditionalCommand shooterRevType = new ConditionalCommand(shooterRevFar, shooterRevClose, Shooter.isDeployedSupplier);
+
+   // public final ConditionalCommand shooterRev = new ConditionalCommand(shooterStop, shooterRevType, Shooter.isOnSupplier);
+
+  //  public final ConditionalCommand shoot = new ConditionalCommand(shooterStop, shooterNear, Shooter.isOnSupplier);
+
+  public final ConditionalCommand shooterRev = new ConditionalCommand(
+      shooterStop,
+      shooterRevUp,
+      Shooter.isOnSupplier
+
+    );
+
+
+  public final StartEndCommand shoot = new StartEndCommand(
+    () -> m_shooter.shoot(), () -> m_shooter.shooterStop()
+    );
 
 
     // === Climber === //

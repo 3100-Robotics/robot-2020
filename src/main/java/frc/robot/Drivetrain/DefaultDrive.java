@@ -4,8 +4,6 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import frc.robot.Drivetrain.Drive;
-
 /**
  * Code should inline a command this simple with
  * {@link edu.wpi.first.wpilibj2.command.RunCommand}.

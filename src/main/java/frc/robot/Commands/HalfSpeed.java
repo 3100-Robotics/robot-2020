@@ -15,7 +15,7 @@ public class HalfSpeed extends CommandBase{
 
 
     private DoubleSupplier m_scale;
-    private double test = 0.6;
+
 
     /**
      * Creates a new DefaultDrive.
@@ -39,13 +39,7 @@ public class HalfSpeed extends CommandBase{
 
 	@Override
     public void execute() {
-      
-      
-
-
-      System.out.println(m_scale);
-
-      m_drive.arcadeDrive(m_forward.getAsDouble() * (m_scale.getAsDouble() + 0.6), m_rotation.getAsDouble() * (m_scale.getAsDouble() + 0.6));
+      m_drive.arcadeDrive(m_forward.getAsDouble() * (m_scale.getAsDouble()), m_rotation.getAsDouble() * (m_scale.getAsDouble()));
     }
 
 

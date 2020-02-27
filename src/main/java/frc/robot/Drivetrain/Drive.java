@@ -8,33 +8,27 @@
 package frc.robot.Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.Faults;
-import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
-import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.controller.PIDController;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.Encoder;
+
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Robot;
-import frc.robot.Mapping.Constants;
-import frc.robot.Mapping.RobotContainer;
 
 import static frc.robot.Mapping.Constants.*;
 
 public class Drive extends SubsystemBase {
 
-    //-------------------------------
+    // -------------------------------
     // Encoder constants
-    //-------------------------------
+    // -------------------------------
     private double limitSpeed = 0;
     private double limitRotate = 0;
     private double scaleSpeed;
@@ -43,37 +37,27 @@ public class Drive extends SubsystemBase {
     private final double rotateAccelerationLimit = 0.08; // Velocity - Tune for different drivetrain, if it's too
                                                          // low/sluggish
 
-    private final double wheelDiamter = 6;
-    private final double wheelInMeters = 0.0254 * wheelDiamter;
-    private final double wheelCircum = ((Math.PI * 2) * wheelInMeters);
-    private final double kScaleFactor = (0.0254 / 4096.0) * wheelCircum;
     // Encoder Scale Factor (Meter)/(Pulse)
     private final double encoderScale = (1 / ENCODER_EDGES_PER_REV) * WHEEL_DIAMETER * Math.PI;
-    
-    
-    
 
-
-    //-------------------------------
+    // -------------------------------
     // Speed Controllers
-    //-------------------------------
+    // -------------------------------
     // Define left Speed Controller
-    private final SpeedControllerGroup left = 
-    new SpeedControllerGroup(frontLeft, backLeft);
+    private final SpeedControllerGroup left = new SpeedControllerGroup(frontLeft, backLeft);
 
     // Define right Speed Controller
-    private final SpeedControllerGroup right = 
-    new SpeedControllerGroup(frontRight, backRight);
+    private final SpeedControllerGroup right = new SpeedControllerGroup(frontRight, backRight);
 
-    //-------------------------------
+    // -------------------------------
     // Differential Drive
-    //-------------------------------
+    // -------------------------------
     // Define Differential Drive
     private final DifferentialDrive m_drive = new DifferentialDrive(left, right);
 
-    //-------------------------------
+    // -------------------------------
     // Encoder, Gyro, and Odometer
-    //-------------------------------
+    // -------------------------------
 
     /**
      * Gets the average distance of the two encoders.
@@ -100,7 +84,6 @@ public class Drive extends SubsystemBase {
     // Odometery class for tracking robot pose
     private final DifferentialDriveOdometry m_odometry;
 
-
     public Drive() {
 
         zeroHeading();
@@ -124,7 +107,8 @@ public class Drive extends SubsystemBase {
      * @return The current wheel speeds.
      */
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(frontLeft.getSelectedSensorVelocity(0), frontRight.getSelectedSensorVelocity(0));
+        return new DifferentialDriveWheelSpeeds(frontLeft.getSelectedSensorVelocity(0),
+                frontRight.getSelectedSensorVelocity(0));
     }
 
     /**
@@ -141,13 +125,13 @@ public class Drive extends SubsystemBase {
 
     public void arcadeDrive(double moveSpeed, double rotateSpeed) {
 
-      //  Limits for speed, using quadratics and max/min
+        // Limits for speed, using quadratics and max/min
         moveSpeed = deadband(moveSpeed);
         rotateSpeed = deadband(rotateSpeed);
 
-        //Normal is 0.8 move, 0.75 rotate
-        scaleSpeed = moveSpeed < 0 ? -0.6 : 0.6;
-        scaleRotate = rotateSpeed < 0 ? -0.55 : 0.55;
+        // Normal is 0.8 move, 0.75 rotate
+        scaleSpeed = moveSpeed < 0 ? -0.8 : 0.8;
+        scaleRotate = rotateSpeed < 0 ? -0.65 : 0.65;
 
         moveSpeed *= scaleSpeed * moveSpeed;
         rotateSpeed *= scaleRotate * rotateSpeed;
@@ -182,10 +166,15 @@ public class Drive extends SubsystemBase {
             limitRotate = rotateSpeed;
         }
 
-        // frontLeft.set(ControlMode.PercentOutput, -limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
-        // frontRight.set(ControlMode.PercentOutput, +limitRotate, DemandType.ArbitraryFeedForward, limitSpeed);
+        // frontLeft.set(ControlMode.PercentOutput, -limitRotate,
+        // DemandType.ArbitraryFeedForward, limitSpeed);
+        // frontRight.set(ControlMode.PercentOutput, +limitRotate,
+        // DemandType.ArbitraryFeedForward, limitSpeed);
+
+        // Constants.frontLeft.set(ControlMode.Velocity, targetVelocity_Units);
+        // Constants.frontRight.set(ControlMode.Velocity, targetVelocity_Units);
         m_drive.arcadeDrive(limitSpeed, limitRotate);
-        
+
     }
 
     // Tank Drive, one Joystick controls the left, one controls the right.
@@ -211,8 +200,7 @@ public class Drive extends SubsystemBase {
         left.setVoltage(leftVolts);
         right.setVoltage(-rightVolts);
         m_drive.feed();
-      }
-
+    }
 
     /**
      * Sets the max output of the drive. Useful for scaling the drive to drive more
@@ -274,10 +262,10 @@ public class Drive extends SubsystemBase {
         // System.out.println("Right");
         // System.out.println(getRightDistance());
 
-    //   System.out.println("Sensor Vel:" + frontLeft.getSelectedSensorVelocity());
-    //   System.out.println("Sensor Pos:" + frontLeft.getSelectedSensorPosition());
-    //   System.out.println("Out %" + frontLeft.getMotorOutputPercent());
-    //   System.out.println("Out Of Phase:" + faults.SensorOutOfPhase);
+        // System.out.println("Sensor Vel:" + frontLeft.getSelectedSensorVelocity());
+        // System.out.println("Sensor Pos:" + frontLeft.getSelectedSensorPosition());
+        // System.out.println("Out %" + frontLeft.getMotorOutputPercent());
+        // System.out.println("Out Of Phase:" + faults.SensorOutOfPhase);
     }
 
 }
