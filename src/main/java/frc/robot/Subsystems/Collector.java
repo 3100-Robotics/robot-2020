@@ -9,34 +9,48 @@ import frc.robot.Mapping.Constants;
 public class Collector extends SubsystemBase {
 
     public static boolean isDeployed = false;
+    public static boolean lightIsBlocked = false;
 
     public final static BooleanSupplier isDeployedSupplier = () -> isDeployed;
+    public final static BooleanSupplier isLightSupplier = () -> lightIsBlocked;
 
     public int lightHigh;
     public int lightLow;
 
-    public Collector() {
-
-    }
 
     public void lightCheck() {
 
+        System.out.println("High");
+        System.out.println(Constants.lightSensorHigh.getValue());
+        System.out.println("Low");
+        System.out.println(Constants.lightSensorLow.getValue());
         // TODO: IF NEEDED ADD BOOLEAN INTERRUPTABLE
+        
 
         while (lightHigh < 20 || lightLow < 20) {
-
+            lightIsBlocked = true;
+            lightHigh = Constants.lightSensorLow.getValue();
+            lightLow = Constants.lightSensorLow.getValue();
             if (lightHigh < 20) {
+
+                lightHigh = Constants.lightSensorLow.getValue();
+                lightLow = Constants.lightSensorLow.getValue();
 
                 // Run motor in reverse
                 Constants.conveyor.set(ControlMode.PercentOutput, -0.3);
 
-            } else if (lightLow < 20) {
+            }else if (lightLow < 20) {
 
+                lightHigh = Constants.lightSensorLow.getValue();
+                lightLow = Constants.lightSensorLow.getValue();
+                
                 // Run motor forward
                 Constants.conveyor.set(ControlMode.PercentOutput, 0.3);
 
             }
         }
+            lightIsBlocked = false;
+        
     }
 
     public void deployCollector() {
@@ -48,6 +62,7 @@ public class Collector extends SubsystemBase {
         isDeployed = true;
 
     }
+    
 
     public void retractCollector() {
 
@@ -58,13 +73,13 @@ public class Collector extends SubsystemBase {
 
     }
 
-    public void groundEject(double speed) {
+    public void groundEject(final double speed) {
 
         Constants.collector.set(ControlMode.PercentOutput, speed);
 
     }
 
-    public void wheelSpeed(double collectspeed, double conveyorspeed) {
+    public void wheelSpeed(final double collectspeed, final double conveyorspeed) {
 
         // Reverse Conveyor and collector
         Constants.collector.set(ControlMode.PercentOutput, collectspeed);
@@ -72,7 +87,7 @@ public class Collector extends SubsystemBase {
 
     }
 
-    public void collectorReverse(double collectspeed, double conveyorspeed, double shooterspeed) {
+    public void collectorReverse(final double collectspeed, final double conveyorspeed, final double shooterspeed) {
 
         // Reverse Conveyor and collector
         Constants.collector.set(ControlMode.PercentOutput, collectspeed);
@@ -83,14 +98,14 @@ public class Collector extends SubsystemBase {
 
     }
 
-    public void humanCollect(double collectspeed, double conveyorspeed) {
+    public void humanCollect(final double collectspeed, final double conveyorspeed) {
 
         Constants.conveyor.set(ControlMode.PercentOutput, conveyorspeed);
         Constants.collector.set(ControlMode.PercentOutput, collectspeed);
 
     }
 
-    public void groundCollect(double collectspeed, double conveyorspeed) {
+    public void groundCollect(final double collectspeed, final double conveyorspeed) {
 
         // Reverse Conveyor and collector
         Constants.collector.set(ControlMode.PercentOutput, -collectspeed);
@@ -98,7 +113,7 @@ public class Collector extends SubsystemBase {
 
     }
 
-    public void reverseInjector(double speed) {
+    public void reverseInjector(final double speed) {
 
         Constants.injector.set(ControlMode.PercentOutput, speed);
         Constants.shooterTop.set(ControlMode.PercentOutput, speed * 0.5);
@@ -106,17 +121,16 @@ public class Collector extends SubsystemBase {
 
     }
 
-    public void initialize() {
+    // public void initialize() {
 
-        lightHigh = Constants.lightSensorHigh.getValue();
-        lightLow = Constants.lightSensorHigh.getValue();
+    //     lightHigh = Constants.lightSensorHigh.getValue();
+    //     lightLow = Constants.lightSensorHigh.getValue();
 
-    }
+    // }
 
     public void execute() {
 
-        lightHigh = Constants.lightSensorHigh.getValue();
-        lightLow = Constants.lightSensorHigh.getValue();
+        
 
     }
 

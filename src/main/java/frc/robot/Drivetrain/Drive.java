@@ -9,6 +9,7 @@ package frc.robot.Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
@@ -73,7 +74,7 @@ public class Drive extends SubsystemBase {
     }
 
     public double getRightDistance() {
-        return (frontRight.getSelectedSensorPosition(0) * encoderScale);// * 0.001;
+        return (frontRight.getSelectedSensorPosition(0) * -1 * encoderScale);// * 0.001;
     }
 
     public static void resetEncoders() {
@@ -168,14 +169,15 @@ public class Drive extends SubsystemBase {
 
         // frontLeft.set(ControlMode.PercentOutput, -limitRotate,
         // DemandType.ArbitraryFeedForward, limitSpeed);
-        // frontRight.set(ControlMode.PercentOutput, +limitRotate,
+        // frontRight.set(ControlMode.PercentOutput, +limitRotate * 1.028,
         // DemandType.ArbitraryFeedForward, limitSpeed);
 
         // Constants.frontLeft.set(ControlMode.Velocity, targetVelocity_Units);
         // Constants.frontRight.set(ControlMode.Velocity, targetVelocity_Units);
-        m_drive.arcadeDrive(limitSpeed, limitRotate);
+        m_drive.arcadeDrive(moveSpeed, rotateSpeed);
 
     }
+
 
     // Tank Drive, one Joystick controls the left, one controls the right.
     public void tankDrive(double leftSpeed, double rightSpeed) {

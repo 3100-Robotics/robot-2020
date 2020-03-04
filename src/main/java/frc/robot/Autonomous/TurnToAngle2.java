@@ -33,26 +33,18 @@ public class TurnToAngle2 extends CommandBase {
   @Override
   public void execute() {
 
+
+    System.out.println(m_drive.getHeading());
     m_drive.arcadeDrive(0, speed);
 
   }
 
   public boolean isFinished() {
 
-    boolean isFinished = false;
+  
 
-    if (m_drive.getHeading() <= target) {
-      isFinished = false;
-    } else {
-      isFinished = true;
-    }
+    return(Math.abs(m_drive.getHeading()) >= target);
 
-    return isFinished;
-  }
-
-  public void end(boolean interrupted) {
-
-    m_drive.arcadeDrive(0, 0);
-
-  }
+ 
+}
 }

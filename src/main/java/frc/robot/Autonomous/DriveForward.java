@@ -17,7 +17,7 @@ public class DriveForward extends CommandBase {
 
     public void initialize() {
         Drive.resetEncoders();
-        drive.arcadeDrive(speed, 0);
+     
     }
 
     public void execute() {
@@ -25,20 +25,16 @@ public class DriveForward extends CommandBase {
 
         // System.out.println("Error");
         // System.out.println(error);
-        // System.out.println(drive.getAverageEncoderDistance());
+        System.out.println(drive.getRightDistance());
 
         drive.arcadeDrive(speed, 0);
 
     }
 
     public boolean isFinished() {
-        return (drive.getAverageEncoderDistance() >= goal);
+        return (Math.abs(drive.getAverageEncoderDistance()) >= goal);
     }
 
-    public void end(boolean interrupted) {
-
-        drive.arcadeDrive(0, 0);
-
-    }
+  
 
 }

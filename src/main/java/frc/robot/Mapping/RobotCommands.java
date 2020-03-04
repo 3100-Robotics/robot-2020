@@ -2,6 +2,7 @@ package frc.robot.Mapping;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Drivetrain.Drive;
+import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Collector;
 import frc.robot.Subsystems.Shooter;
 
@@ -9,6 +10,7 @@ import frc.robot.Subsystems.Shooter;
 public class RobotCommands{
 
     public final static Drive m_robotDrive = new Drive();
+    public final static Climber m_climber = new Climber();
     public final Shooter m_shooter = new Shooter();
     public final Collector m_collector = new Collector();
 
@@ -17,13 +19,13 @@ public class RobotCommands{
     // === Collector === //
     public final StartEndCommand groundEject = new StartEndCommand(
       //Sets the collector motor to reverse
-        () -> m_collector.groundEject(0.5),
+        () -> m_collector.groundEject(1),
         () -> m_collector.groundEject(0),
         m_collector
     );
     public final StartEndCommand collectorReverse = new StartEndCommand (
       //Sets both the collector and conveyor motors to reverse
-        () -> m_collector.collectorReverse(0.3, 0.4, 0.3),
+        () -> m_collector.collectorReverse(0.6, 0.8, 0.2),
         () -> m_collector.collectorReverse(0.0, 0.0, 0.0),
         m_collector
     );
@@ -49,7 +51,13 @@ public class RobotCommands{
     public final InstantCommand deployCollector = new InstantCommand(
         () -> m_collector.deployCollector()
     );
+    public final InstantCommand deployCollector2 = new InstantCommand(
+        () -> m_collector.deployCollector()
+    );
     public final InstantCommand retractCollector = new InstantCommand(
+        () -> m_collector.retractCollector()
+    );
+    public final InstantCommand retractCollector2 = new InstantCommand(
         () -> m_collector.retractCollector()
     );
     public final ConditionalCommand collector = new ConditionalCommand(retractCollector, deployCollector, Collector.isDeployedSupplier);
@@ -57,9 +65,14 @@ public class RobotCommands{
 
    // === Beam Breaks === //
 
-    public final RunCommand beam = new RunCommand(
+    public final InstantCommand beam = new InstantCommand(
       () -> m_collector.lightCheck()
     );
+
+    // public final PrintCommand noBeam = new PrintCommand("Nothing in Break");
+
+  //  public final ConditionalCommand runBeam = new ConditionalCommand(beam, beam, 
+  //      Collector.isLightSupplier);
 
 
     
@@ -88,14 +101,7 @@ public class RobotCommands{
     );
 
 
-    public final InstantCommand incrimentUp = new InstantCommand(
-      () -> m_shooter.incrimentUp()
-
-    );
-    public final InstantCommand incrimentDown = new InstantCommand(
-      () -> m_shooter.incrimentDown()
-
-    );
+   
  
 
 

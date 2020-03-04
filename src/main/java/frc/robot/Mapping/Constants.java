@@ -1,10 +1,12 @@
 package frc.robot.Mapping;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
@@ -51,17 +53,24 @@ public final class Constants {
   public static final int injectorChannel = 8;
   public static final int conveyorChannel = 9;
 
+  public static final int TeleoscopeChannel = 10;
+  public static final int WinchChannel = 11;
+  
+
   public static final WPI_TalonFX frontLeft = new WPI_TalonFX(frontLeftDriveMotor);
   public static final WPI_TalonFX backLeft = new WPI_TalonFX(backLeftDriveMotor);
   public static final WPI_TalonFX frontRight = new WPI_TalonFX(frontRightDriveMotor);
   public static final WPI_TalonFX backRight = new WPI_TalonFX(backRightDriveMotor);
 
-  public static final VictorSPX collector = new VictorSPX(collectorChannel);
-  public static final VictorSPX conveyor = new VictorSPX(conveyorChannel);
-  public static final VictorSPX injector = new VictorSPX(injectorChannel);
+  public static final WPI_VictorSPX collector = new WPI_VictorSPX(collectorChannel);
+  public static final WPI_VictorSPX conveyor = new WPI_VictorSPX(conveyorChannel);
+  public static final WPI_VictorSPX injector = new WPI_VictorSPX(injectorChannel);
 
   public static final WPI_TalonFX shooterTop = new WPI_TalonFX(shooterTopChannel);
   public static final WPI_TalonFX shooterBottom = new WPI_TalonFX(shooterBottomChannel);
+
+  public static final WPI_TalonFX winch = new WPI_TalonFX(WinchChannel);
+  public static final WPI_TalonSRX teleoscope = new WPI_TalonSRX(TeleoscopeChannel);
 
   // === SOLENOID === //
   public static final Solenoid intakeSolenoid = new Solenoid(41, 1);
@@ -69,10 +78,13 @@ public final class Constants {
   public static final Solenoid angleSolenoid = new Solenoid(41, 3);
   public static final Solenoid angleSolenoidExhaust = new Solenoid(41, 0);
 
-  // === BEAM BREAK === //
+  // === SENSORS === //
 
   public static final AnalogInput lightSensorHigh = new AnalogInput(1);
   public static final AnalogInput lightSensorLow = new AnalogInput(2);
+
+  public static final DigitalInput bumperLeft = new DigitalInput(1);
+  public static final DigitalInput bumperRight = new DigitalInput(2);
 
   // === ENCODER === //
   public static final double MM_TO_IN = 0.0393701;
@@ -127,10 +139,10 @@ public final class Constants {
 
   public static final double speedTop = 0.35;
   public static final double speedBottom = 0.35;
+  public static final double moveConstant = 2.7;
 
 }
 
-// TODO: This is what I can use to test PID Tuning
 // RobotMap.driveControls.getRightTrigger() * 22000
 
 // RobotMap.driveControls.getRightTrigger();

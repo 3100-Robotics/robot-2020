@@ -20,8 +20,8 @@ public class Shooter extends SubsystemBase {
     public final static BooleanSupplier isOnSupplier = () -> isOn;
     public final static BooleanSupplier isOnShootSupplier = () -> isOnShoot;
 
-    public static double shooterSpeed = 435;
-    public static double shooterSpeedFar = 1100;
+    public static double shooterSpeed = 490;
+    public static double shooterSpeedFar = 1000;
 
     public final static DoubleSupplier shooterSpeedSupplier = () -> shooterSpeed;
 
@@ -47,7 +47,7 @@ public class Shooter extends SubsystemBase {
         if (isDeployed == true) {
 
             Constants.shooterTop.set(ControlMode.Velocity, shooterSpeedFar * 1.5);
-            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeedFar);
+            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeedFar - 25);
 
         } else if (isDeployed == false) {
 
@@ -55,20 +55,6 @@ public class Shooter extends SubsystemBase {
             Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeed);
 
         }
-
-    }
-
-    public void incrimentUp() {
-
-        shooterSpeed = shooterSpeed + 0.01;
-        System.out.println(shooterSpeed);
-
-    }
-
-    public void incrimentDown() {
-
-        shooterSpeed = shooterSpeed - 0.01;
-        System.out.println(shooterSpeed);
 
     }
 
@@ -90,7 +76,7 @@ public class Shooter extends SubsystemBase {
         if (isDeployed == false) {
 
             Constants.shooterTop.set(ControlMode.Velocity, shooterSpeed * 1.5);
-            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeed);
+            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeed - 25);
             Constants.conveyor.set(ControlMode.PercentOutput, 0.9);
             Constants.collector.set(ControlMode.PercentOutput, -0.9);
             Constants.injector.set(ControlMode.PercentOutput, -0.9);
@@ -98,7 +84,7 @@ public class Shooter extends SubsystemBase {
         } else if (isDeployed == true) {
 
             Constants.shooterTop.set(ControlMode.Velocity, shooterSpeedFar * 1.5);
-            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeedFar);
+            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeedFar - 25);
             Constants.conveyor.set(ControlMode.PercentOutput, 0.9);
             Constants.collector.set(ControlMode.PercentOutput, -0.9);
             Constants.injector.set(ControlMode.PercentOutput, -0.9);
@@ -111,8 +97,7 @@ public class Shooter extends SubsystemBase {
 
         SmartDashboard.putBoolean("SHOOTER IS REVED", isOn);
         SmartDashboard.putBoolean("SHOOTER IS HIGH", isDeployed);
-        // lightHigh = Constants.lightSensorHigh.getValue();
-        // lightLow = Constants.lightSensorHigh.getValue();
+
 
     }
 

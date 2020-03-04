@@ -4,6 +4,7 @@ package frc.robot.Mapping;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+
 import static frc.robot.Mapping.Constants.*;
 
 public class SpeedControllerSetUp {
@@ -21,6 +22,10 @@ public class SpeedControllerSetUp {
 
         shooterTop.configFactoryDefault();
         shooterBottom.configFactoryDefault();
+
+        teleoscope.configFactoryDefault();
+        winch.configFactoryDefault();
+      
         /*
          * 
          * conveyor. collector. injector.
@@ -29,11 +34,14 @@ public class SpeedControllerSetUp {
          * 
          */
 
-        frontLeft.setInverted(true);
-        backLeft.setInverted(true);
-        frontRight.setInverted(true);
-        backRight.setInverted(true);
+        frontLeft.setInverted(false);
+        backLeft.setInverted(false);
+        frontRight.setInverted(false);
+        backRight.setInverted(false);
         shooterTop.setInverted(false);
+
+        teleoscope.setInverted(false);
+        winch.setInverted(false);
 
         frontLeft.setNeutralMode(NeutralMode.Coast);
         frontRight.setNeutralMode(NeutralMode.Coast);
@@ -46,6 +54,9 @@ public class SpeedControllerSetUp {
 
         shooterTop.setNeutralMode(NeutralMode.Coast);
         shooterBottom.setNeutralMode(NeutralMode.Coast);
+
+        teleoscope.setNeutralMode(NeutralMode.Brake);
+        winch.setNeutralMode(NeutralMode.Brake);
 
         shooterTop.enableVoltageCompensation(false);
         shooterBottom.enableVoltageCompensation(false);
@@ -61,15 +72,15 @@ public class SpeedControllerSetUp {
         // RobotMap.rightFrontDriveMotor.config_kF(0, 1023.0/22425.0);
 
         // frontLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        // frontLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        // frontRight.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        frontLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        frontRight.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
-        frontLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
-        frontRight.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
+       // frontLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
+     
 
-        frontLeft.setSensorPhase(false);
-        frontRight.setSensorPhase(false);
+      // setRobotDistanceConfigs(rightInvert, rightConfig);
 
+       
         frontLeft.configNominalOutputForward(0);
         frontLeft.configNominalOutputReverse(0);
         frontLeft.configPeakOutputForward(1);
@@ -79,16 +90,6 @@ public class SpeedControllerSetUp {
         frontRight.configNominalOutputReverse(0);
         frontRight.configPeakOutputForward(1);
         frontRight.configPeakOutputReverse(-1);
-
-        frontLeft.config_kF(0, 0.4995117188);
-        frontLeft.config_kP(0, 0.01455192034);
-        frontLeft.config_kI(0, 0);
-        frontLeft.config_kD(0, 0);
-
-        frontRight.config_kF(0, 0.4995117188);
-        frontRight.config_kP(0, 0.01455192034);
-        frontRight.config_kI(0, 0);
-        frontRight.config_kD(0, 0);
 
         shooterTop.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
         shooterBottom.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
@@ -107,7 +108,7 @@ public class SpeedControllerSetUp {
         shooterBottom.configPeakOutputReverse(-1);
 
         shooterTop.config_kF(0, 0.4995117188);
-        shooterTop.config_kP(0, 0.01455192034);
+        shooterTop.config_kP(0, 0.018);
         shooterTop.config_kI(0, 0);
         shooterTop.config_kD(0, 0);
 
@@ -126,5 +127,7 @@ public class SpeedControllerSetUp {
         // talon.enableCurrentLimit(true);
 
     }
+
+    
 
 }

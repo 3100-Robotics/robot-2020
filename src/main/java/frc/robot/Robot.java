@@ -11,11 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Mapping.RobotContainer;
@@ -50,10 +46,10 @@ public class Robot extends TimedRobot {
   // private SendableChooser<Character> autoGroup;
   // private SendableChooser<Command> chooser = new SendableChooser<>();
 
-  public static double v;
-  public static double x;
-  double y;
-  double a;
+  // public static double v;
+  // public static double x;
+  // double y;
+  // double a;
 
   // Initalizing
   public void robotInit() {
@@ -93,22 +89,26 @@ public class Robot extends TimedRobot {
     // Runs the Scheduler
     CommandScheduler.getInstance().run();
 
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTableEntry tv = table.getEntry("tv");
-    NetworkTableEntry tx = table.getEntry("tx");
-    NetworkTableEntry ty = table.getEntry("ty");
-    NetworkTableEntry ta = table.getEntry("ta");
+    // NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    // NetworkTableEntry tv = table.getEntry("tv");
+    // NetworkTableEntry tx = table.getEntry("tx");
+    // NetworkTableEntry ty = table.getEntry("ty");
+    // NetworkTableEntry ta = table.getEntry("ta");
+
+    
+
+   
 
     // read values periodically
-    v = tv.getDouble(0.0);
-    x = tx.getDouble(0.0);
-    y = ty.getDouble(0.0);
-    a = ta.getDouble(0.0);
+    // v = tv.getDouble(0.0);
+    // x = tx.getDouble(0.0);
+    // y = ty.getDouble(0.0);
+    // a = ta.getDouble(0.0);
 
-    // post to smart dashboard periodically
-    SmartDashboard.putNumber("LimelightX", x);
-    SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", a);
+    // // post to smart dashboard periodically
+    // SmartDashboard.putNumber("LimelightX", x);
+    // SmartDashboard.putNumber("LimelightY", y);
+    // SmartDashboard.putNumber("LimelightArea", a);
   }
 
   @Override
@@ -158,6 +158,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
+    // v = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+    // // x = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+    // y = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+
   }
 
   @Override
