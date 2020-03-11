@@ -34,7 +34,6 @@ public class AutoShoot extends CommandBase {
 
     public void execute(){
 
-     
         Constants.shooterTop.set(ControlMode.PercentOutput, top);// 0.35
         Constants.shooterBottom.set(ControlMode.PercentOutput, bottom); //0.30
         Constants.conveyor.set(ControlMode.PercentOutput, 0.9);

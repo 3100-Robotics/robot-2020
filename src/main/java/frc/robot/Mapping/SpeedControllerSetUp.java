@@ -40,6 +40,8 @@ public class SpeedControllerSetUp {
         backRight.setInverted(false);
         shooterTop.setInverted(false);
 
+        collector.setInverted(true);
+
         teleoscope.setInverted(false);
         winch.setInverted(false);
 

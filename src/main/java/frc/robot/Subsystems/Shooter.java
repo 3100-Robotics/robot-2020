@@ -20,8 +20,10 @@ public class Shooter extends SubsystemBase {
     public final static BooleanSupplier isOnSupplier = () -> isOn;
     public final static BooleanSupplier isOnShootSupplier = () -> isOnShoot;
 
-    public static double shooterSpeed = 490;
-    public static double shooterSpeedFar = 1000;
+    public static double shooterSpeed = 1100;
+    public static double offsetClose = 0;
+    public static double shooterSpeedFar = 1500;
+    public static double offsetFar = 200;
 
     public final static DoubleSupplier shooterSpeedSupplier = () -> shooterSpeed;
 
@@ -44,17 +46,20 @@ public class Shooter extends SubsystemBase {
     public void shooterRev() {
 
         isOn = true;
-        if (isDeployed == true) {
+        if (isDeployed == false) {
+            //CLOSE
 
-            Constants.shooterTop.set(ControlMode.Velocity, shooterSpeedFar * 1.5);
-            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeedFar - 25);
-
-        } else if (isDeployed == false) {
-
-            Constants.shooterTop.set(ControlMode.Velocity, shooterSpeed * 1.5);
+            Constants.shooterTop.set(ControlMode.Velocity, shooterSpeed * 1.5 + offsetClose);
             Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeed);
 
         }
+        else if (isDeployed == true) {
+            //FAR
+
+            Constants.shooterTop.set(ControlMode.Velocity, shooterSpeedFar * 1.5);
+            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeedFar + offsetFar);
+
+        } 
 
     }
 
@@ -74,17 +79,19 @@ public class Shooter extends SubsystemBase {
 
         isOn = true;
         if (isDeployed == false) {
+            //CLOSE
 
-            Constants.shooterTop.set(ControlMode.Velocity, shooterSpeed * 1.5);
-            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeed - 25);
+            Constants.shooterTop.set(ControlMode.Velocity, shooterSpeed * 1.5 + offsetClose);
+            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeed);
             Constants.conveyor.set(ControlMode.PercentOutput, 0.9);
             Constants.collector.set(ControlMode.PercentOutput, -0.9);
             Constants.injector.set(ControlMode.PercentOutput, -0.9);
 
         } else if (isDeployed == true) {
 
+            //FAR
             Constants.shooterTop.set(ControlMode.Velocity, shooterSpeedFar * 1.5);
-            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeedFar - 25);
+            Constants.shooterBottom.set(ControlMode.Velocity, shooterSpeedFar + offsetFar);
             Constants.conveyor.set(ControlMode.PercentOutput, 0.9);
             Constants.collector.set(ControlMode.PercentOutput, -0.9);
             Constants.injector.set(ControlMode.PercentOutput, -0.9);
@@ -97,6 +104,12 @@ public class Shooter extends SubsystemBase {
 
         SmartDashboard.putBoolean("SHOOTER IS REVED", isOn);
         SmartDashboard.putBoolean("SHOOTER IS HIGH", isDeployed);
+        // SmartDashboard.putNumber("CloseShooterSpeed", shooterSpeed);
+        // SmartDashboard.putNumber("CloseOffset", offsetClose);
+        // SmartDashboard.putNumber("FarShooterSpeed", shooterSpeedFar);
+        // SmartDashboard.putNumber("FarOffset", offsetFar);
+        // SmartDashboard.getNumber("CloseOffset", offsetClose);
+        //System.out.println(offsetClose);
 
 
     }

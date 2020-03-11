@@ -141,6 +141,13 @@ public final class Constants {
   public static final double speedBottom = 0.35;
   public static final double moveConstant = 2.7;
 
+
+  public static final double kMaxTrackerDistance = 9.0;
+  public static final double kMaxGoalTrackAge = 2.5;
+  public static final double kMaxGoalTrackSmoothingTime = 0.5;
+  public static double kCameraFrameRate = 30;
+  public static final double kPathFollowingMaxAccel = 40;
+
 }
 
 // RobotMap.driveControls.getRightTrigger() * 22000

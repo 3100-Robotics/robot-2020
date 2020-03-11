@@ -2,19 +2,24 @@
 package frc.robot.Mapping;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Limelight.LimeTurn;
+import frc.robot.Limelight.LimelightOn;
 import frc.robot.Drivetrain.DefaultDrive;
 import frc.robot.Commands.*;
 import static frc.robot.Mapping.RobotCommands.*;
 
 public class RobotContainer {
+
+  public Sendable time;
 
   private final RobotCommands robotCommands = new RobotCommands();
 
@@ -29,6 +34,7 @@ public class RobotContainer {
 
   private final JoystickButton reset = new JoystickButton(m_driveController, Constants.aButtonChannel);
   private final JoystickButton test = new JoystickButton(m_driveController, Constants.bButtonChannel);
+  private final JoystickButton limeLightOn = new JoystickButton(m_driveController, Constants.backButtonChannel);
   private final JoystickButton beam = new JoystickButton(m_driveController, Constants.yButtonChannel);
 
   // === Collector === //
@@ -44,12 +50,21 @@ public class RobotContainer {
   private final POVButton shooterFar = new POVButton(m_techController, Constants.POVU);
   private final POVButton shooterNear = new POVButton(m_techController, Constants.POVD);
 
-  private final SequentialCommandGroup BehindLine = new SequentialCommandGroup(
-      new frc.robot.Autonomous.Routes.BehindLine(m_robotDrive));
-  private final SequentialCommandGroup FrontLine = new SequentialCommandGroup(
-      new frc.robot.Autonomous.Routes.FrontLine(m_robotDrive));
+  private final SequentialCommandGroup BehindLineToTrench = new SequentialCommandGroup(
+      new frc.robot.Autonomous.Routes.BehindLineToTrench(m_robotDrive));
+  private final SequentialCommandGroup FrontLineForward = new SequentialCommandGroup(
+      new frc.robot.Autonomous.Routes.FrontLineForward(m_robotDrive));
+  private final SequentialCommandGroup FrontLineBackward = new SequentialCommandGroup(
+      new frc.robot.Autonomous.Routes.FrontLineBackward(m_robotDrive));
+  private final SequentialCommandGroup EightBall = new SequentialCommandGroup(
+      new frc.robot.Autonomous.Routes.EightBall(m_robotDrive));
+  private final SequentialCommandGroup FiveBallAligned = new SequentialCommandGroup(
+      new frc.robot.Autonomous.Routes.FiveBallAligned(m_robotDrive));
+  private final SequentialCommandGroup FiveBallAngled = new SequentialCommandGroup(
+      new frc.robot.Autonomous.Routes.FiveBallAngled(m_robotDrive));
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+  SendableChooser<Integer> m_time = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, RobotContainer devices, and
@@ -71,17 +86,31 @@ public class RobotContainer {
         new Climb(m_climber, () -> m_techController.getY(GenericHID.Hand.kLeft),
             () -> m_techController.getY(GenericHID.Hand.kRight)));
 
-    m_chooser.addOption("Behind", BehindLine);
-    m_chooser.addOption("In-Front", FrontLine);
+    m_chooser.addOption("BehindLineToTrench", BehindLineToTrench);
+    m_chooser.addOption("FrontLineForward", FrontLineForward);
+    m_chooser.addOption("FrontLineBackward", FrontLineBackward);
+    m_chooser.addOption("FiveBallAligned", FiveBallAligned);
+    m_chooser.addOption("FiveBallAngled", FiveBallAngled);
+    m_chooser.addOption("Eight", EightBall);
+    //m_chooser.addOption("In-Front", TestRoute);
+    m_time.addOption("No Wait", 0);
+    m_time.addOption("1 sec", 1);
+    m_time.addOption("2 sec", 2);
+    m_time.addOption("3 sec", 3);
+    m_time.addOption("4 sec", 4);
+    m_time.addOption("5 sec", 5);
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
+    Shuffleboard.getTab("Autonomous").add(m_time);
+    // time = SmartDashboard.getData("Time");
   }
 
   private void configureButtonBindings() {
 
     reset.whenPressed(new Reset());
-    test.whileHeld(new Test());
+    test.whenPressed(new Test());
+    limeLightOn.whenPressed(new LimelightOn());
     // beam.whenPressed(robotCommands.beam);
 
     halfSpeed.whileActiveContinuous(new HalfSpeed(m_robotDrive, () -> -m_driveController.getY(GenericHID.Hand.kLeft),

@@ -3,11 +3,11 @@ package frc.robot.Autonomous;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Drivetrain.Drive;
 
-public class DriveForward extends CommandBase {
+public class AutonDrive extends CommandBase {
     public final Drive drive;
     private final double goal, speed;
 
-    public DriveForward(final double goalDistance, final double driveSpeed, final Drive drive) {
+    public AutonDrive(final double goalDistance, final double driveSpeed, final Drive drive) {
         this.drive = drive;
         this.goal = goalDistance;
         this.speed = driveSpeed;

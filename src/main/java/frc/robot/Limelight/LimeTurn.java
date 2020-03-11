@@ -8,7 +8,7 @@ public class LimeTurn extends CommandBase{
 
     private final Drive m_drive;
     final double STEER_K = 0.15;
-    private boolean stop1 = false;
+    private boolean stop = false;
     private double x;
     private double v;
 
@@ -26,15 +26,6 @@ public class LimeTurn extends CommandBase{
     }
 
     public void execute(){
-
-        // NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-        // NetworkTableEntry tx = table.getEntry("tx");
-        // NetworkTableEntry tv = table.getEntry("tv");
-        // x = tx.getDouble(0.0);
-        // v = tv.getDouble(0.0);
-        
-      //TODO: CREATE LOGIC TO TURN AT ONE SPEED TILL CLOSE, THEN A CONSTANT VALUE TILL IT GETS TO 0*
-
   
         if (v < 1.0)
         {
@@ -49,15 +40,15 @@ public class LimeTurn extends CommandBase{
 
 
             }
-            stop1 = true;
+            stop = true;
       
         }
 
-        stop1 = true;
+        stop = true;
     }
     public boolean isFinished(){
 
-        return stop1;
+        return stop;
     }
 
 }

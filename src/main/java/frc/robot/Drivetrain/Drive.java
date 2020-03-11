@@ -27,6 +27,8 @@ import static frc.robot.Mapping.Constants.*;
 
 public class Drive extends SubsystemBase {
 
+    private static Drive mInstance;
+
     // -------------------------------
     // Encoder constants
     // -------------------------------
@@ -131,7 +133,7 @@ public class Drive extends SubsystemBase {
         rotateSpeed = deadband(rotateSpeed);
 
         // Normal is 0.8 move, 0.75 rotate
-        scaleSpeed = moveSpeed < 0 ? -0.8 : 0.8;
+        scaleSpeed = moveSpeed < 0 ? -0.9 : 0.9;
         scaleRotate = rotateSpeed < 0 ? -0.65 : 0.65;
 
         moveSpeed *= scaleSpeed * moveSpeed;

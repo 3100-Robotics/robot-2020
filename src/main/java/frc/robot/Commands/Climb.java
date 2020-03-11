@@ -35,7 +35,7 @@ public class Climb extends CommandBase {
 
   public void execute() {
 
-    Constants.teleoscope.set(ControlMode.PercentOutput, m_teleoscope.getAsDouble() * 0.2);
+    Constants.teleoscope.set(ControlMode.PercentOutput, m_teleoscope.getAsDouble() * 0.4);
     Constants.winch.set(ControlMode.PercentOutput, m_winch.getAsDouble() * 0.5);
 
   }

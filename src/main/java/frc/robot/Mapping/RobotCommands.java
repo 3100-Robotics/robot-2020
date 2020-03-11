@@ -2,6 +2,7 @@ package frc.robot.Mapping;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Drivetrain.Drive;
+import frc.robot.Limelight.Camera;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Collector;
 import frc.robot.Subsystems.Shooter;
@@ -13,6 +14,7 @@ public class RobotCommands{
     public final static Climber m_climber = new Climber();
     public final Shooter m_shooter = new Shooter();
     public final Collector m_collector = new Collector();
+    public final Camera m_camera = new Camera();
 
 
 
@@ -31,13 +33,24 @@ public class RobotCommands{
     );
     public final StartEndCommand groundCollect = new StartEndCommand (
       //Sets both the collector and conveyor motors to take in balls
-        () -> m_collector.groundCollect(0.6, 0.8),
+        () -> m_collector.groundCollect(1, 0.85),
         () -> m_collector.groundCollect(0.0, 0.0),
         m_collector
     );
+
+    public final InstantCommand groundCollectOn = new InstantCommand(
+      () -> m_collector.groundCollectOn(1, 0.85)
+    );
+    public final InstantCommand groundCollectOff = new InstantCommand(
+      () -> m_collector.groundCollectOff()
+    );
+
+
+    public final ConditionalCommand groundToggle = new ConditionalCommand(groundCollectOff, groundCollectOn, Collector.isCollectingSupplier);
+
     public final StartEndCommand humanCollect = new StartEndCommand(
       //TODO: CHECK/ADJUST VALUES 
-      () -> m_collector.humanCollect(0.6, 0.8),
+      () -> m_collector.humanCollect(0.9, 0.85),
       () -> m_collector.humanCollect(0.0, 0.0),
       m_collector
     );

@@ -10,9 +10,11 @@ public class Collector extends SubsystemBase {
 
     public static boolean isDeployed = false;
     public static boolean lightIsBlocked = false;
+    public static boolean isCollecting = false;
 
     public final static BooleanSupplier isDeployedSupplier = () -> isDeployed;
     public final static BooleanSupplier isLightSupplier = () -> lightIsBlocked;
+    public final static BooleanSupplier isCollectingSupplier = () -> isCollecting;
 
     public int lightHigh;
     public int lightLow;
@@ -101,7 +103,7 @@ public class Collector extends SubsystemBase {
     public void humanCollect(final double collectspeed, final double conveyorspeed) {
 
         Constants.conveyor.set(ControlMode.PercentOutput, conveyorspeed);
-        Constants.collector.set(ControlMode.PercentOutput, collectspeed);
+        // Constants.collector.set(ControlMode.PercentOutput, collectspeed);
 
     }
 
@@ -110,6 +112,25 @@ public class Collector extends SubsystemBase {
         // Reverse Conveyor and collector
         Constants.collector.set(ControlMode.PercentOutput, -collectspeed);
         Constants.conveyor.set(ControlMode.PercentOutput, conveyorspeed);
+
+    }
+
+    public void groundCollectOn(final double collectspeed, final double conveyorspeed) {
+
+        // Reverse Conveyor and collector
+      
+        Constants.collector.set(ControlMode.PercentOutput, -collectspeed);
+        Constants.conveyor.set(ControlMode.PercentOutput, conveyorspeed);
+        isCollecting = true;
+
+    }
+    public void groundCollectOff() {
+
+        // Reverse Conveyor and collector
+      
+        Constants.collector.set(ControlMode.PercentOutput, 0.0);
+        Constants.conveyor.set(ControlMode.PercentOutput, 0.0);
+        isCollecting = false;
 
     }
 
