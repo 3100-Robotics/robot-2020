@@ -30,7 +30,7 @@ public class RobotContainer {
 
   // === Drive === //
   private final AxisButton halfSpeed = new AxisButton(m_driveController, Constants.rightTriggerChannel);
-  private final JoystickButton limeTurn = new JoystickButton(m_driveController, Constants.xButtonChannel);
+  private final AxisButton limeTurn = new AxisButton(m_driveController, Constants.leftTriggerChannel);
 
   private final JoystickButton reset = new JoystickButton(m_driveController, Constants.aButtonChannel);
   private final JoystickButton test = new JoystickButton(m_driveController, Constants.bButtonChannel);
@@ -116,7 +116,7 @@ public class RobotContainer {
     halfSpeed.whileActiveContinuous(new HalfSpeed(m_robotDrive, () -> -m_driveController.getY(GenericHID.Hand.kLeft),
         () -> m_driveController.getX(GenericHID.Hand.kRight),
         () -> m_driveController.getRawAxis(Constants.rightTriggerChannel)));
-    limeTurn.whileHeld(new LimeTurn(m_robotDrive));
+    limeTurn.whileActiveContinuous(new LimeTurn(m_robotDrive, () -> -m_driveController.getY(GenericHID.Hand.kLeft)));
 
     groundEject.whileActiveContinuous(robotCommands.groundEject);
     collectorReverse.whileHeld(robotCommands.collectorReverse);

@@ -23,7 +23,7 @@ public class FiveBallAligned extends SequentialCommandGroup {
             new AutonDrive(2 * Constants.moveConstant, -0.8, drive),
             new TurnToAngle2(75, -0.8, drive),
             new AutonDrive(4 * Constants.moveConstant, 0.8, drive),
-            new LimeTurn(drive)//,
+            new AutonAlign(drive)//,
             // new AutoRev(4, 0.25, 0.6),
             // new AutoShoot(3, 0.25, 0.6)
             
